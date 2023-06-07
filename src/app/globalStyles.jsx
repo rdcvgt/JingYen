@@ -152,6 +152,11 @@ export const theme = {
 			line-height: 1.4;
 			font-weight: 300;
 		`,
+		editTitleStyle: css`
+			font-size: 3rem;
+			line-height: 1.4;
+			font-weight: 300;
+		`,
 	},
 };
 
