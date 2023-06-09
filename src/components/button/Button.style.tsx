@@ -34,3 +34,14 @@ export const secondaryBtn = css`
 		color: ${theme.color.green[50]};
 	}
 `;
+
+export const dangerousBtn = css`
+	${defaultStyle}
+	border: 1px solid #ccc;
+
+	&:hover {
+		transition: all 0.3s;
+		border: 1px solid ${theme.color.red[50]};
+		color: ${theme.color.red[50]};
+	}
+`;

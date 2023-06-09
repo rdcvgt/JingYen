@@ -22,7 +22,7 @@ export function PhotoSlider() {
 					src={first}
 					alt="Image 1"
 					fill={true}
-					style={{ objectFit: "cover" }}
+					style={{ objectFit: "contain" }}
 				/>
 			</SplideSlide>
 			<SplideSlide>
@@ -30,7 +30,7 @@ export function PhotoSlider() {
 					src={second}
 					alt="Image 2"
 					fill={true}
-					style={{ objectFit: "cover" }}
+					style={{ objectFit: "contain" }}
 				/>
 			</SplideSlide>
 			<SplideSlide>
@@ -38,7 +38,7 @@ export function PhotoSlider() {
 					src={third}
 					alt="Image 2"
 					fill={true}
-					style={{ objectFit: "cover" }}
+					style={{ objectFit: "contain" }}
 				/>
 			</SplideSlide>
 		</Splide>

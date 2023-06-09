@@ -19,7 +19,6 @@ const CaseArea = styled.div`
 `;
 
 const PhotoArea = styled.div`
-	border-radius: 20px;
 	margin: 0 auto;
 	overflow: hidden;
 `;
