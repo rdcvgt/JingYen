@@ -10,7 +10,8 @@ import {
 import { defaultInput } from "@/components/input/Input.style";
 import UploadArea from "./components/uploadArea";
 import CustomItemArea from "./components/customItemArea";
-import { createNewCase } from "@/firebase/database";
+import { addNewCase } from "@/firebase/database";
+import { uploadImagesToStorage } from "@/firebase/storage";
 
 const Container = styled.div`
 	margin-left: 300px;
@@ -71,7 +72,7 @@ export interface FormData {
 		工程類型: string | undefined;
 		工程狀態: string | undefined;
 		模板數量: string | undefined;
-		工程照片: File[];
+		工程照片: string[];
 	};
 	custom: CustomItem[];
 }
@@ -85,7 +86,7 @@ export default function Case() {
 	const caseStatusRef = useRef<HTMLSelectElement>(null);
 	const caseDigitsRef = useRef<HTMLInputElement>(null);
 
-	const handleSaveClick = () => {
+	const handleSaveClick = async () => {
 		const formData: FormData = {
 			default: {
 				工程名稱: caseNameRef.current?.value,
@@ -93,20 +94,25 @@ export default function Case() {
 				工程類型: caseTypeRef.current?.value,
 				工程狀態: caseStatusRef.current?.value,
 				模板數量: caseDigitsRef.current?.value,
-				工程照片: selectedFiles,
+				工程照片: selectedFiles.map((file) => file.name),
 			},
 			custom: customItem,
 		};
 
-		if (
-			formData.default.工程名稱 === "" ||
-			formData.default.工程業主 === "" ||
-			formData.default.模板數量 === ""
-		) {
-			console.log("錯誤");
-			return;
+		// if (
+		// 	formData.default.工程名稱 === "" ||
+		// 	formData.default.工程業主 === "" ||
+		// 	formData.default.模板數量 === ""
+		// ) {
+		// 	console.log("錯誤");
+		// 	return;
+		// }
+
+		const caseId = await addNewCase(formData);
+		console.log(selectedFiles);
+		if (caseId && formData.default.工程照片.length > 0) {
+			uploadImagesToStorage(caseId, selectedFiles);
 		}
-		createNewCase(formData);
 	};
 
 	return (

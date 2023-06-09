@@ -4,6 +4,7 @@ import Image from "next/image";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import { PhotoSlider } from "@/components/slider/Slider";
+import { useRouter } from "next/navigation";
 
 const Container = styled.div`
 	margin: 0 auto;
@@ -44,7 +45,9 @@ const Detail = styled.div`
 	display: flex;
 `;
 
-export default function Case() {
+export default function Case({ params }: { params: { slug: string } }) {
+	console.log(params);
+
 	return (
 		<Container>
 			<CaseArea>

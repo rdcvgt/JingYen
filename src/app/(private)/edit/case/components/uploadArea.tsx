@@ -72,14 +72,24 @@ interface ChildComponentProps {
 export default function UploadArea(props: ChildComponentProps) {
 	const selectedFiles = props.selectedFiles;
 	const setSelectedFiles = props.setSelectedFiles;
+	const short = require("short-uuid");
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
 			const files = Array.from(event.target.files);
+			console.log(files);
 
 			const maxSize = 5 * 1024 * 1024; // 限制檔案大小為 5MB
 
-			const selectedFiles = files.filter((file) => file.size <= maxSize);
+			const selectedFiles = files
+				.filter((file) => file.size <= maxSize)
+				.map((file) => {
+					const newName = `${short.generate()}`; // 使用 uuid 生成新的檔案名稱
+					const fileType = file.type; // 保存原始檔案的 type
+					const newFile = new File([file], newName); // 建立新的檔案物件，並指定新的名稱
+					Object.defineProperty(newFile, "type", { value: fileType });
+					return newFile;
+				});
 
 			setSelectedFiles((prev) => {
 				if (prev.length > 0) {
