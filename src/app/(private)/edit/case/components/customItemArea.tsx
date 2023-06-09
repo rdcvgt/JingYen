@@ -1,12 +1,8 @@
 "use client";
-import { useState } from "react";
 import styled from "@emotion/styled";
 import { secondaryBtn, dangerousBtn } from "@/components/button/Button.style";
 import { defaultInput } from "@/components/input/Input.style";
-
-const FormArea = styled.div`
-	margin-top: 40px;
-`;
+import { CustomItem } from "../page";
 
 const Item = styled.div`
 	margin-top: 30px;
@@ -37,11 +33,6 @@ const AddItemButton = styled.div`
 	border-radius: 20px;
 	margin-bottom: 120px;
 `;
-
-interface CustomItem {
-	title: string;
-	content: string | number;
-}
 
 interface ChildComponentProps {
 	customItem: CustomItem[];

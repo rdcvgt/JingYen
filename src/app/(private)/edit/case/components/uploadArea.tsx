@@ -1,9 +1,8 @@
 "use client";
 import styled from "@emotion/styled";
-import Link from "next/link";
 import { theme } from "@/app/globalStyles";
-import { secondaryBtn, dangerousBtn } from "@/components/button/Button.style";
-import { ChangeEvent, useState } from "react";
+import { secondaryBtn } from "@/components/button/Button.style";
+import { ChangeEvent } from "react";
 import Image from "next/image";
 
 const Button = styled.div`

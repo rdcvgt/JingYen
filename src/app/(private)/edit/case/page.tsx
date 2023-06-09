@@ -10,6 +10,7 @@ import {
 import { defaultInput } from "@/components/input/Input.style";
 import UploadArea from "./components/uploadArea";
 import CustomItemArea from "./components/customItemArea";
+import { createNewCase } from "@/firebase/database";
 
 const Container = styled.div`
 	margin-left: 300px;
@@ -38,27 +39,8 @@ const Input = styled.input`
 	${defaultInput}
 `;
 
-const ShortInput = styled.input`
-	${defaultInput}
-	width: 90px;
-	margin-left: 0;
-`;
-
 const Select = styled.select`
 	${defaultInput}
-`;
-
-const DeleteItemButton = styled.div`
-	${dangerousBtn}
-	border-radius: 20px;
-	width: 70px;
-	margin-left: 10px;
-`;
-
-const AddItemButton = styled.div`
-	${secondaryBtn}
-	border-radius: 20px;
-	margin-bottom: 120px;
 `;
 
 const ConfirmArea = styled.div`
@@ -77,12 +59,12 @@ const SaveButton = styled.div`
 	${defaultBtn}
 `;
 
-interface CustomItem {
+export interface CustomItem {
 	title: string;
 	content: string | number;
 }
 
-interface FormData {
+export interface FormData {
 	default: {
 		工程名稱: string | undefined;
 		工程業主: string | undefined;
@@ -122,9 +104,9 @@ export default function Case() {
 			formData.default.模板數量 === ""
 		) {
 			console.log("錯誤");
+			return;
 		}
-
-		console.log(formData);
+		createNewCase(formData);
 	};
 
 	return (
