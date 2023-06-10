@@ -1,13 +1,8 @@
 "use client";
 import styled from "@emotion/styled";
-import { useState } from "react";
-import {
-	defaultBtn,
-	secondaryBtn,
-	dangerousBtn,
-} from "@/components/button/Button.style";
+import { defaultBtn, secondaryBtn } from "@/components/button/Button.style";
 import { theme } from "@/app/globalStyles";
-import { CardInfo } from "@/app/(private)/cms/components/formLayout";
+import { CardInfo } from "@/app/(private)/cms/types";
 
 const Background = styled.div`
 	background-color: rgba(0, 0, 0, 0.5);

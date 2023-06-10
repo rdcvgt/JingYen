@@ -2,11 +2,7 @@
 import { useState, useRef } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
-import {
-	defaultBtn,
-	secondaryBtn,
-	dangerousBtn,
-} from "@/components/button/Button.style";
+import { defaultBtn, secondaryBtn } from "@/components/button/Button.style";
 import { defaultInput } from "@/components/input/Input.style";
 import UploadArea from "./uploadArea";
 import CustomItemArea from "./customItemArea";
@@ -14,6 +10,7 @@ import { addNewCase } from "@/firebase/database";
 import { uploadPhotoToStorage } from "@/firebase/storage";
 import Card from "@/components/card/Card";
 import { useRouter } from "next/navigation";
+import { FormDefaultData, CustomItem, FormData, CardInfo } from "../types";
 
 const Container = styled.div`
 	margin-left: 300px;
@@ -76,40 +73,21 @@ const SaveButton = styled.div<SaveButtonProps>`
 	pointer-events: ${(props) => (props.isUploading ? "none" : "auto")};
 `;
 
-export interface CustomItem {
-	title: string;
-	content: string | number;
-}
-
-export interface FormData {
-	default: {
-		工程名稱: string | undefined;
-		工程業主: string | undefined;
-		工程類型: string | undefined;
-		工程狀態: string | undefined;
-		模板數量: string | undefined;
-		工程照片: string[];
-	};
-	custom: CustomItem[];
-}
-
 type SaveButtonProps = {
 	isUploading: boolean;
 	// 其他屬性...
 };
 
-export interface CardInfo {
-	title: string;
-	message: string;
-	leftBtnName: string;
-	rightBtnName: string;
-	leftBtnFunc: () => void;
-	rightBtnFunc: () => void;
-	closeFunc: () => void;
+interface ChildComponentProps {
+	defaultData: FormDefaultData;
 }
 
-export default function Case() {
-	const [customItem, setCustomItem] = useState<CustomItem[]>([]);
+export default function FormLayout(props: ChildComponentProps) {
+	const { defaultData } = props;
+
+	const [customItem, setCustomItem] = useState<CustomItem[]>(
+		defaultData.customItem
+	);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 	const [showWarning, setShowWaring] = useState<boolean>(false);
 	const [cardInfo, setCardInfo] = useState<CardInfo | null>(null);
@@ -157,16 +135,21 @@ export default function Case() {
 
 		//傳遞卡片訊息並顯示
 		const SuccessCardInfo: CardInfo = {
-			title: "儲存成功",
+			title: defaultData.type === "add" ? "新增成功" : "儲存成功",
 			message: "",
 			leftBtnName: "前往查看",
-			rightBtnName: "新增一筆",
+			rightBtnName: defaultData.type === "add" ? "新增一筆" : "返回",
 			leftBtnFunc: () => {
 				router.push(`/case/${caseId}`);
 			},
-			rightBtnFunc: () => {
-				window.location.href = "/edit/case";
-			},
+			rightBtnFunc:
+				defaultData.type === "add"
+					? () => {
+							window.location.href = "/cms/add-case";
+					  }
+					: () => {
+							setCardInfo(null);
+					  },
 			closeFunc: () => {
 				setCardInfo(null);
 			},
@@ -184,7 +167,8 @@ export default function Case() {
 			leftBtnName: "是",
 			rightBtnName: "否",
 			leftBtnFunc: () => {
-				window.location.href = "/edit/case";
+				window.location.href =
+					defaultData.type === "add" ? "/cms/add-case" : "/cms/edit-case";
 			},
 			rightBtnFunc: () => {
 				setCardInfo(null);
@@ -199,7 +183,7 @@ export default function Case() {
 
 	return (
 		<Container>
-			<Title>{"新增工程案例"}</Title>
+			<Title>{defaultData.title}</Title>
 			<FormArea>
 				<Item>
 					工程照片：
@@ -210,15 +194,27 @@ export default function Case() {
 				</Item>
 				<Item>
 					工程名稱：
-					<Input placeholder="必填" ref={caseNameRef} defaultValue={""} />
+					<Input
+						placeholder="必填"
+						ref={caseNameRef}
+						defaultValue={defaultData.caseName}
+					/>
 				</Item>
 				<Item>
 					工程業主：
-					<Input placeholder="必填" ref={caseOwnerRef} defaultValue={""} />
+					<Input
+						placeholder="必填"
+						ref={caseOwnerRef}
+						defaultValue={defaultData.caseOwner}
+					/>
 				</Item>
 				<Item>
 					工程類型：
-					<Select id="type" name="type" ref={caseTypeRef} defaultValue="企業">
+					<Select
+						id="type"
+						name="type"
+						ref={caseTypeRef}
+						defaultValue={defaultData.caseType}>
 						<option value="民宅">民宅</option>
 						<option value="企業">企業</option>
 						<option value="公有">公有</option>
@@ -230,7 +226,7 @@ export default function Case() {
 						id="status"
 						name="status"
 						ref={caseStatusRef}
-						defaultValue="已完成">
+						defaultValue={defaultData.caseStatus}>
 						<option value="進行中">進行中</option>
 						<option value="已完成">已完成</option>
 					</Select>
@@ -242,7 +238,7 @@ export default function Case() {
 						type="number"
 						placeholder="必填，僅限輸入數字"
 						ref={caseDigitsRef}
-						defaultValue={""}
+						defaultValue={defaultData.caseDigits}
 					/>{" "}
 					㎡
 				</Item>
