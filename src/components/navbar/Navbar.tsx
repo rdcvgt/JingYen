@@ -61,7 +61,7 @@ export default function Navbar() {
 					<Logo>瑾諺工程</Logo>
 				</LeftBlock>
 				<RightBlock>
-					<Link href="/edit/case" passHref>
+					<Link href="/cms/add-case" passHref>
 						<Button>編輯後台</Button>
 					</Link>
 					<Link href="/case" passHref>
