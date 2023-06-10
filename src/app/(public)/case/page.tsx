@@ -48,7 +48,7 @@ const Detail = styled.div`
 `;
 
 export default function Case({ params }: { params: { id: string } }) {
-	const [caseData, setCaseData] = useState<FormData>();
+	const [caseData, setCaseData] = useState<FormData | false>();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -57,7 +57,6 @@ export default function Case({ params }: { params: { id: string } }) {
 				if (!data) {
 					redirect("/case");
 				}
-				console.log(data);
 				setCaseData(data);
 			} catch (error) {
 				console.error("Error fetching case data:", error);
@@ -70,37 +69,19 @@ export default function Case({ params }: { params: { id: string } }) {
 	return (
 		<Container>
 			<CaseArea>
-				<PhotoArea>
+				{/* <PhotoArea>
 					<PhotoSlider />
-				</PhotoArea>
-				<Title>{caseData?.default.工程名稱}</Title>
+				</PhotoArea> */}
+				<Title>case</Title>
 				<Description>
 					<Item>
 						業主：
-						<Detail>{caseData?.default.工程業主}</Detail>
+						<Detail>猛揮營造股份有限公司</Detail>
 					</Item>
-					<Item>
-						工程類型：
-						<Detail>{caseData?.default.工程類型}</Detail>
-					</Item>
-					<Item>
-						工程進度：
-						<Detail>{caseData?.default.工程狀態}</Detail>
-					</Item>
-
 					<Item>
 						模板數量：
-						<Detail>{caseData?.default.模板數量} ㎡</Detail>
+						<Detail>26,533 ㎡</Detail>
 					</Item>
-					{caseData &&
-						caseData?.custom.length > 0 &&
-						caseData?.custom.map((el, index) => {
-							return (
-								<Item key={index}>
-									{el.title}：<Detail>{el.content}</Detail>
-								</Item>
-							);
-						})}
 				</Description>
 			</CaseArea>
 		</Container>

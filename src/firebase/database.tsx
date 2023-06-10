@@ -1,4 +1,4 @@
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "./init";
 import { FormData } from "@/app/(private)/edit/case/page";
 
@@ -14,3 +14,22 @@ export async function addNewCase(caseConfig: FormData) {
 		console.error("Error creating document:", error);
 	}
 }
+
+export async function getCaseData(caseId: string) {
+	try {
+		const docRef = doc(db, "case", caseId);
+		const docSnapshot = await getDoc(docRef);
+
+		if (docSnapshot.exists()) {
+			const caseData = docSnapshot.data();
+
+			return caseData;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		console.error("Error getting case data:", error);
+	}
+}
+
+//
