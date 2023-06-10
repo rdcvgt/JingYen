@@ -47,24 +47,8 @@ const Detail = styled.div`
 	display: flex;
 `;
 
-export default function Case({ params }: { params: { id: string } }) {
+export default function Case() {
 	const [caseData, setCaseData] = useState<FormData | false>();
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = (await getCaseData(params.id)) as FormData | false;
-				if (!data) {
-					redirect("/case");
-				}
-				setCaseData(data);
-			} catch (error) {
-				console.error("Error fetching case data:", error);
-			}
-		};
-
-		fetchData();
-	}, [params.id]);
 
 	return (
 		<Container>

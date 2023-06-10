@@ -5,8 +5,9 @@ import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import { PhotoSlider } from "@/components/slider/Slider";
 import { getCaseData } from "@/firebase/database";
+import { getCasePhotos } from "@/firebase/storage";
 import { FormData } from "@/app/(private)/edit/case/page";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 const Container = styled.div`
 	margin: 0 auto;
@@ -49,16 +50,24 @@ const Detail = styled.div`
 
 export default function Case({ params }: { params: { id: string } }) {
 	const [caseData, setCaseData] = useState<FormData>();
+	const [casePhotoArr, setCasePhotoArr] = useState<string[] | []>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const data = (await getCaseData(params.id)) as FormData | false;
 				if (!data) {
-					redirect("/case");
+					notFound();
 				}
-				console.log(data);
 				setCaseData(data);
+			} catch (error) {
+				console.error("Error fetching case data:", error);
+				notFound();
+			}
+
+			try {
+				const data = (await getCasePhotos(params.id)) as string[] | [];
+				setCasePhotoArr(data);
 			} catch (error) {
 				console.error("Error fetching case data:", error);
 			}
@@ -70,9 +79,12 @@ export default function Case({ params }: { params: { id: string } }) {
 	return (
 		<Container>
 			<CaseArea>
-				<PhotoArea>
-					<PhotoSlider />
-				</PhotoArea>
+				{casePhotoArr.length > 0 && (
+					<PhotoArea>
+						<PhotoSlider casePhotoArr={casePhotoArr} />
+					</PhotoArea>
+				)}
+
 				<Title>{caseData?.default.工程名稱}</Title>
 				<Description>
 					<Item>

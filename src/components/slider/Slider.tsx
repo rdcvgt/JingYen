@@ -2,14 +2,20 @@
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/css";
 import Image from "next/image";
-import first from "../../photo/1.jpg";
-import second from "../../photo/2.webp";
-import third from "../../photo/3.webp";
 
-export function PhotoSlider() {
+interface ChildComponentProps {
+	casePhotoArr: string[] | [];
+}
+
+export function PhotoSlider(props: ChildComponentProps) {
+	const { casePhotoArr } = props;
+	if (casePhotoArr.length === 0) {
+		return <></>;
+	}
+
 	return (
 		<Splide
-			aria-label="My Favorite Images"
+			aria-label="Case Images"
 			options={{
 				rewind: true,
 				width: "100vw",
@@ -17,30 +23,18 @@ export function PhotoSlider() {
 				autoHeight: true,
 				gap: "1rem",
 			}}>
-			<SplideSlide>
-				<Image
-					src={first}
-					alt="Image 1"
-					fill={true}
-					style={{ objectFit: "contain" }}
-				/>
-			</SplideSlide>
-			<SplideSlide>
-				<Image
-					src={second}
-					alt="Image 2"
-					fill={true}
-					style={{ objectFit: "contain" }}
-				/>
-			</SplideSlide>
-			<SplideSlide>
-				<Image
-					src={third}
-					alt="Image 2"
-					fill={true}
-					style={{ objectFit: "contain" }}
-				/>
-			</SplideSlide>
+			{casePhotoArr.map((url, index) => {
+				return (
+					<SplideSlide key={index}>
+						<Image
+							src={url}
+							alt={`工程照片-${index + 1}`}
+							fill={true}
+							style={{ objectFit: "contain" }}
+						/>
+					</SplideSlide>
+				);
+			})}
 		</Splide>
 	);
 }

@@ -11,7 +11,7 @@ import { defaultInput } from "@/components/input/Input.style";
 import UploadArea from "./components/uploadArea";
 import CustomItemArea from "./components/customItemArea";
 import { addNewCase } from "@/firebase/database";
-import { uploadImagesToStorage } from "@/firebase/storage";
+import { uploadPhotoToStorage } from "@/firebase/storage";
 
 const Container = styled.div`
 	margin-left: 300px;
@@ -111,7 +111,7 @@ export default function Case() {
 		const caseId = await addNewCase(formData);
 		console.log(selectedFiles);
 		if (caseId && formData.default.工程照片.length > 0) {
-			uploadImagesToStorage(caseId, selectedFiles);
+			uploadPhotoToStorage(caseId, selectedFiles);
 		}
 	};
 

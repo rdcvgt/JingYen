@@ -1,7 +1,7 @@
 import { storage } from "./init";
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
 
-export async function uploadImagesToStorage(caseId: string, files: File[]) {
+export async function uploadPhotoToStorage(caseId: string, files: File[]) {
 	const storageRef = ref(storage, `case/${caseId}`); // 設定儲存路徑
 
 	// 遍歷所有檔案並上傳至 Firebase Storage
@@ -11,4 +11,22 @@ export async function uploadImagesToStorage(caseId: string, files: File[]) {
 	}
 
 	console.log("Images uploaded successfully");
+}
+
+export async function getCasePhotos(caseId: string) {
+	const storageRef = ref(storage, `case/${caseId}`);
+
+	try {
+		const result = await listAll(storageRef);
+		const photoUrls = [];
+
+		for (const item of result.items) {
+			const downloadUrl = await getDownloadURL(item);
+			photoUrls.push(downloadUrl);
+		}
+		return photoUrls;
+	} catch (error) {
+		console.error("Error getting case photos:", error);
+		return [];
+	}
 }
