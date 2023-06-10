@@ -8,10 +8,12 @@ import {
 	dangerousBtn,
 } from "@/components/button/Button.style";
 import { defaultInput } from "@/components/input/Input.style";
-import UploadArea from "./components/uploadArea";
-import CustomItemArea from "./components/customItemArea";
+import UploadArea from "./uploadArea";
+import CustomItemArea from "./customItemArea";
 import { addNewCase } from "@/firebase/database";
 import { uploadPhotoToStorage } from "@/firebase/storage";
+import Card from "@/components/card/Card";
+import { useRouter } from "next/navigation";
 
 const Container = styled.div`
 	margin-left: 300px;
@@ -52,12 +54,26 @@ const ConfirmArea = styled.div`
 	gap: 20px;
 `;
 
+const Hint = styled.div`
+	position: fixed;
+	bottom: 110px;
+	right: 50px;
+	${theme.display.center}
+	width: 220px;
+	height: 40px;
+	background-color: ${theme.color.red[10]};
+	color: ${theme.color.red[50]};
+	border: 1px solid ${theme.color.red[50]};
+	border-radius: 5px;
+`;
+
 const CancelButton = styled.div`
 	${secondaryBtn}
 `;
 
-const SaveButton = styled.div`
+const SaveButton = styled.div<SaveButtonProps>`
 	${defaultBtn}
+	pointer-events: ${(props) => (props.isUploading ? "none" : "auto")};
 `;
 
 export interface CustomItem {
@@ -77,14 +93,35 @@ export interface FormData {
 	custom: CustomItem[];
 }
 
+type SaveButtonProps = {
+	isUploading: boolean;
+	// 其他屬性...
+};
+
+export interface CardInfo {
+	title: string;
+	message: string;
+	leftBtnName: string;
+	rightBtnName: string;
+	leftBtnFunc: () => void;
+	rightBtnFunc: () => void;
+	closeFunc: () => void;
+}
+
 export default function Case() {
 	const [customItem, setCustomItem] = useState<CustomItem[]>([]);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+	const [showWarning, setShowWaring] = useState<boolean>(false);
+	const [cardInfo, setCardInfo] = useState<CardInfo | null>(null);
+	const [isUploading, setIsUploading] = useState<boolean>(false);
+
 	const caseNameRef = useRef<HTMLInputElement>(null);
 	const caseOwnerRef = useRef<HTMLInputElement>(null);
 	const caseTypeRef = useRef<HTMLSelectElement>(null);
 	const caseStatusRef = useRef<HTMLSelectElement>(null);
 	const caseDigitsRef = useRef<HTMLInputElement>(null);
+
+	const router = useRouter();
 
 	const handleSaveClick = async () => {
 		const formData: FormData = {
@@ -99,25 +136,70 @@ export default function Case() {
 			custom: customItem,
 		};
 
-		// if (
-		// 	formData.default.工程名稱 === "" ||
-		// 	formData.default.工程業主 === "" ||
-		// 	formData.default.模板數量 === ""
-		// ) {
-		// 	console.log("錯誤");
-		// 	return;
-		// }
-
-		const caseId = await addNewCase(formData);
-		console.log(selectedFiles);
-		if (caseId && formData.default.工程照片.length > 0) {
-			uploadPhotoToStorage(caseId, selectedFiles);
+		//檢驗欄位是否為空
+		if (
+			formData.default.工程名稱 === "" ||
+			formData.default.工程業主 === "" ||
+			formData.default.模板數量 === ""
+		) {
+			setShowWaring(true);
+			return;
+		} else {
+			setShowWaring(false);
 		}
+
+		//取得 caseId並儲存照片到資料庫
+		setIsUploading(true);
+		const caseId = await addNewCase(formData);
+		if (caseId && formData.default.工程照片.length > 0) {
+			await uploadPhotoToStorage(caseId, selectedFiles);
+		}
+
+		//傳遞卡片訊息並顯示
+		const SuccessCardInfo: CardInfo = {
+			title: "儲存成功",
+			message: "",
+			leftBtnName: "前往查看",
+			rightBtnName: "新增一筆",
+			leftBtnFunc: () => {
+				router.push(`/case/${caseId}`);
+			},
+			rightBtnFunc: () => {
+				window.location.href = "/edit/case";
+			},
+			closeFunc: () => {
+				setCardInfo(null);
+			},
+		};
+
+		setIsUploading(false);
+		setCardInfo(SuccessCardInfo);
+	};
+
+	const handleCancelClick = () => {
+		//傳遞卡片訊息並顯示
+		const CancelCardInfo: CardInfo = {
+			title: "是否取消編輯？",
+			message: "選擇「是」，當前編輯資料將會清除。",
+			leftBtnName: "是",
+			rightBtnName: "否",
+			leftBtnFunc: () => {
+				window.location.href = "/edit/case";
+			},
+			rightBtnFunc: () => {
+				setCardInfo(null);
+			},
+			closeFunc: () => {
+				setCardInfo(null);
+			},
+		};
+
+		setCardInfo(CancelCardInfo);
 	};
 
 	return (
 		<Container>
-			<Title>新增工程案例</Title>
+			<Title>{"新增工程案例"}</Title>
 			<FormArea>
 				<Item>
 					工程照片：
@@ -128,15 +210,15 @@ export default function Case() {
 				</Item>
 				<Item>
 					工程名稱：
-					<Input placeholder="必填" ref={caseNameRef} />
+					<Input placeholder="必填" ref={caseNameRef} defaultValue={""} />
 				</Item>
 				<Item>
 					工程業主：
-					<Input placeholder="必填" ref={caseOwnerRef} />
+					<Input placeholder="必填" ref={caseOwnerRef} defaultValue={""} />
 				</Item>
 				<Item>
 					工程類型：
-					<Select id="type" name="type" ref={caseTypeRef}>
+					<Select id="type" name="type" ref={caseTypeRef} defaultValue="企業">
 						<option value="民宅">民宅</option>
 						<option value="企業">企業</option>
 						<option value="公有">公有</option>
@@ -144,7 +226,11 @@ export default function Case() {
 				</Item>
 				<Item>
 					工程狀態：
-					<Select id="status" name="status" ref={caseStatusRef}>
+					<Select
+						id="status"
+						name="status"
+						ref={caseStatusRef}
+						defaultValue="已完成">
 						<option value="進行中">進行中</option>
 						<option value="已完成">已完成</option>
 					</Select>
@@ -156,15 +242,20 @@ export default function Case() {
 						type="number"
 						placeholder="必填，僅限輸入數字"
 						ref={caseDigitsRef}
+						defaultValue={""}
 					/>{" "}
 					㎡
 				</Item>
 				<CustomItemArea customItem={customItem} setCustomItem={setCustomItem} />
 			</FormArea>
 			<ConfirmArea>
-				<CancelButton>取消</CancelButton>
-				<SaveButton onClick={handleSaveClick}>儲存</SaveButton>
+				<CancelButton onClick={handleCancelClick}>取消</CancelButton>
+				<SaveButton onClick={handleSaveClick} isUploading={isUploading}>
+					{isUploading ? "請稍候" : "儲存"}
+				</SaveButton>
 			</ConfirmArea>
+			{showWarning && <Hint>必填欄位不得為空</Hint>}
+			{cardInfo && <Card cardInfo={cardInfo} />}
 		</Container>
 	);
 }

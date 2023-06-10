@@ -6,7 +6,7 @@ import styled from "@emotion/styled";
 import { PhotoSlider } from "@/components/slider/Slider";
 import { getCaseData } from "@/firebase/database";
 import { getCasePhotos } from "@/firebase/storage";
-import { FormData } from "@/app/(private)/edit/case/page";
+import { FormData } from "@/app/(private)/cms/add-case/page";
 import { notFound } from "next/navigation";
 
 const Container = styled.div`

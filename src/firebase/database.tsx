@@ -1,6 +1,6 @@
 import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "./init";
-import { FormData } from "@/app/(private)/edit/case/page";
+import { FormData } from "@/app/(private)/cms/components/formLayout";
 
 export async function addNewCase(caseConfig: FormData) {
 	try {
