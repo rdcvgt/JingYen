@@ -35,11 +35,11 @@ export default function Sidebar() {
 			<Link href="/case" passHref>
 				<Button>回案例</Button>
 			</Link>
-			<Link href="/edit/case" passHref>
+			<Link href="/cms/add-case" passHref>
 				<Button>新增案件</Button>
 			</Link>
-			<Link href="/contact" passHref>
-				<Button>聯繫業務</Button>
+			<Link href="/cms/edit-case" passHref>
+				<Button>編輯案例</Button>
 			</Link>
 			<Link href="/" passHref>
 				<Button>登出</Button>

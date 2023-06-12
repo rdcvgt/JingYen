@@ -1,9 +1,12 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import { PhotoSlider } from "@/components/slider/Slider";
+import { getCaseData } from "@/firebase/database";
+import { FormData } from "@/app/(private)/cms/add-case/page";
+import { redirect } from "next/navigation";
 
 const Container = styled.div`
 	margin: 0 auto;
@@ -45,16 +48,15 @@ const Detail = styled.div`
 `;
 
 export default function Case() {
+	const [caseData, setCaseData] = useState<FormData | false>();
+
 	return (
 		<Container>
 			<CaseArea>
-				<PhotoArea>
+				{/* <PhotoArea>
 					<PhotoSlider />
-				</PhotoArea>
-				<Title>
-					三峽-行天宮醫療志業醫療財團法人
-					恩主公醫院附設橫溪恩主公護理之家新建工程
-				</Title>
+				</PhotoArea> */}
+				<Title>case</Title>
 				<Description>
 					<Item>
 						業主：

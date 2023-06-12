@@ -2,7 +2,7 @@
 import styled from "@emotion/styled";
 import { secondaryBtn, dangerousBtn } from "@/components/button/Button.style";
 import { defaultInput } from "@/components/input/Input.style";
-import { CustomItem } from "../page";
+import { CustomItem } from "../types";
 
 const Item = styled.div`
 	margin-top: 30px;
