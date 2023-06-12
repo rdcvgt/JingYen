@@ -1,13 +1,9 @@
-export interface FormDefaultData {
-	type: "add" | "edit";
-	title: string;
-	caseName: string;
-	caseOwner: string;
-	caseType: "民宅" | "企業" | "公有";
-	caseStatus: "已完成" | "進行中";
-	caseDigits: string | number;
-	customItem: [];
-	saveBtnName: "儲存" | "更新";
+export interface FormDefaultData extends FormData {
+	other: {
+		type: "edit" | "add" | "pending";
+		title: string;
+		saveBtnName: "更新" | "儲存";
+	};
 }
 
 export interface CustomItem {
@@ -15,15 +11,17 @@ export interface CustomItem {
 	content: string | number;
 }
 
+interface Main {
+	工程名稱: string | undefined;
+	工程業主: string | undefined;
+	工程類型: "民宅" | "企業" | "公有" | undefined;
+	工程狀態: "已完成" | "進行中" | undefined;
+	模板數量: string | undefined;
+	工程照片: string[];
+}
+
 export interface FormData {
-	default: {
-		工程名稱: string | undefined;
-		工程業主: string | undefined;
-		工程類型: string | undefined;
-		工程狀態: string | undefined;
-		模板數量: string | undefined;
-		工程照片: string[];
-	};
+	main: Main;
 	custom: CustomItem[];
 }
 

@@ -85,24 +85,24 @@ export default function Case({ params }: { params: { id: string } }) {
 					</PhotoArea>
 				)}
 
-				<Title>{caseData?.default.工程名稱}</Title>
+				<Title>{caseData?.main.工程名稱}</Title>
 				<Description>
 					<Item>
 						業主：
-						<Detail>{caseData?.default.工程業主}</Detail>
+						<Detail>{caseData?.main.工程業主}</Detail>
 					</Item>
 					<Item>
 						工程類型：
-						<Detail>{caseData?.default.工程類型}</Detail>
+						<Detail>{caseData?.main.工程類型}</Detail>
 					</Item>
 					<Item>
 						工程進度：
-						<Detail>{caseData?.default.工程狀態}</Detail>
+						<Detail>{caseData?.main.工程狀態}</Detail>
 					</Item>
 
 					<Item>
 						模板數量：
-						<Detail>{caseData?.default.模板數量} ㎡</Detail>
+						<Detail>{caseData?.main.模板數量} ㎡</Detail>
 					</Item>
 					{caseData &&
 						caseData?.custom.length > 0 &&

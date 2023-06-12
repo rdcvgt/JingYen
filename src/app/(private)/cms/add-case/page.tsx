@@ -13,20 +13,25 @@ const Container = styled.div`
 
 export default function AddCase() {
 	const formDefaultData: FormDefaultData = {
-		type: "add",
-		title: "新增工程案例",
-		caseName: "",
-		caseOwner: "",
-		caseType: "民宅",
-		caseStatus: "已完成",
-		caseDigits: "",
-		customItem: [],
-		saveBtnName: "儲存",
+		other: {
+			type: "add",
+			title: "新增工程案例",
+			saveBtnName: "儲存",
+		},
+		main: {
+			工程名稱: "",
+			工程業主: "",
+			工程類型: "民宅",
+			工程狀態: "已完成",
+			模板數量: "",
+			工程照片: [],
+		},
+		custom: [],
 	};
 
 	return (
 		<>
-			<FormLayout defaultData={formDefaultData} />
+			<FormLayout mainData={formDefaultData} />
 		</>
 	);
 }

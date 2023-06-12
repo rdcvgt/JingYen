@@ -70,19 +70,15 @@ const SaveButton = styled.div<SaveButtonProps>`
 
 type SaveButtonProps = {
 	isUploading: boolean;
-	// 其他屬性...
 };
 
 interface ChildComponentProps {
-	defaultData: FormDefaultData;
+	mainData: FormDefaultData;
 }
 
 export default function FormLayout(props: ChildComponentProps) {
-	const { defaultData } = props;
-
-	const [customItem, setCustomItem] = useState<CustomItem[]>(
-		defaultData.customItem
-	);
+	const { mainData } = props;
+	const [customItem, setCustomItem] = useState<CustomItem[]>(mainData.custom);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 	const [showWarning, setShowWaring] = useState<boolean>(false);
 	const [cardInfo, setCardInfo] = useState<CardInfo | null>(null);
@@ -98,11 +94,18 @@ export default function FormLayout(props: ChildComponentProps) {
 
 	const handleSaveClick = async () => {
 		const formData: FormData = {
-			default: {
+			main: {
 				工程名稱: caseNameRef.current?.value,
 				工程業主: caseOwnerRef.current?.value,
-				工程類型: caseTypeRef.current?.value,
-				工程狀態: caseStatusRef.current?.value,
+				工程類型: caseTypeRef.current?.value as
+					| "民宅"
+					| "企業"
+					| "公有"
+					| undefined,
+				工程狀態: caseStatusRef.current?.value as
+					| "已完成"
+					| "進行中"
+					| undefined,
 				模板數量: caseDigitsRef.current?.value,
 				工程照片: selectedFiles.map((file) => file.name),
 			},
@@ -111,9 +114,9 @@ export default function FormLayout(props: ChildComponentProps) {
 
 		//檢驗欄位是否為空
 		if (
-			formData.default.工程名稱 === "" ||
-			formData.default.工程業主 === "" ||
-			formData.default.模板數量 === ""
+			formData.main.工程名稱 === "" ||
+			formData.main.工程業主 === "" ||
+			formData.main.模板數量 === ""
 		) {
 			setShowWaring(true);
 			return;
@@ -124,21 +127,21 @@ export default function FormLayout(props: ChildComponentProps) {
 		//取得 caseId並儲存照片到資料庫
 		setIsUploading(true);
 		const caseId = await addNewCase(formData);
-		if (caseId && formData.default.工程照片.length > 0) {
+		if (caseId && formData.main.工程照片.length > 0) {
 			await uploadPhotoToStorage(caseId, selectedFiles);
 		}
 
 		//傳遞卡片訊息並顯示
 		const SuccessCardInfo: CardInfo = {
-			title: defaultData.type === "add" ? "新增成功" : "儲存成功",
+			title: mainData.other.type === "add" ? "新增成功" : "儲存成功",
 			message: "",
 			leftBtnName: "前往查看",
-			rightBtnName: defaultData.type === "add" ? "新增一筆" : "返回",
+			rightBtnName: mainData.other.type === "add" ? "新增一筆" : "返回",
 			leftBtnFunc: () => {
 				router.push(`/case/${caseId}`);
 			},
 			rightBtnFunc:
-				defaultData.type === "add"
+				mainData.other.type === "add"
 					? () => {
 							window.location.href = "/cms/add-case";
 					  }
@@ -163,7 +166,7 @@ export default function FormLayout(props: ChildComponentProps) {
 			rightBtnName: "否",
 			leftBtnFunc: () => {
 				window.location.href =
-					defaultData.type === "add" ? "/cms/add-case" : "/cms/edit-case";
+					mainData.other.type === "add" ? "/cms/add-case" : "/cms/edit-case";
 			},
 			rightBtnFunc: () => {
 				setCardInfo(null);
@@ -178,7 +181,7 @@ export default function FormLayout(props: ChildComponentProps) {
 
 	return (
 		<Container>
-			<Title>{defaultData.title}</Title>
+			<Title>{mainData.other.title}</Title>
 			<FormArea>
 				<Item>
 					工程照片：
@@ -192,7 +195,7 @@ export default function FormLayout(props: ChildComponentProps) {
 					<Input
 						placeholder="必填"
 						ref={caseNameRef}
-						defaultValue={defaultData.caseName}
+						defaultValue={mainData.main.工程名稱}
 					/>
 				</Item>
 				<Item>
@@ -200,7 +203,7 @@ export default function FormLayout(props: ChildComponentProps) {
 					<Input
 						placeholder="必填"
 						ref={caseOwnerRef}
-						defaultValue={defaultData.caseOwner}
+						defaultValue={mainData.main.工程業主}
 					/>
 				</Item>
 				<Item>
@@ -209,7 +212,7 @@ export default function FormLayout(props: ChildComponentProps) {
 						id="type"
 						name="type"
 						ref={caseTypeRef}
-						defaultValue={defaultData.caseType}>
+						defaultValue={mainData.main.工程類型}>
 						<option value="民宅">民宅</option>
 						<option value="企業">企業</option>
 						<option value="公有">公有</option>
@@ -221,7 +224,7 @@ export default function FormLayout(props: ChildComponentProps) {
 						id="status"
 						name="status"
 						ref={caseStatusRef}
-						defaultValue={defaultData.caseStatus}>
+						defaultValue={mainData.main.工程狀態}>
 						<option value="進行中">進行中</option>
 						<option value="已完成">已完成</option>
 					</Select>
@@ -233,7 +236,7 @@ export default function FormLayout(props: ChildComponentProps) {
 						type="number"
 						placeholder="必填，僅限輸入數字"
 						ref={caseDigitsRef}
-						defaultValue={defaultData.caseDigits}
+						defaultValue={mainData.main.模板數量}
 					/>{" "}
 					㎡
 				</Item>
@@ -242,7 +245,7 @@ export default function FormLayout(props: ChildComponentProps) {
 			<ConfirmArea>
 				<CancelButton onClick={handleCancelClick}>取消</CancelButton>
 				<SaveButton onClick={handleSaveClick} isUploading={isUploading}>
-					{isUploading ? "請稍候" : defaultData.saveBtnName}
+					{isUploading ? "請稍候" : mainData.other.saveBtnName}
 				</SaveButton>
 			</ConfirmArea>
 			{showWarning && <Hint>必填欄位不得為空</Hint>}
