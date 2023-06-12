@@ -48,9 +48,14 @@ const Detail = styled.div`
 	display: flex;
 `;
 
+export interface CasePhotoArr {
+	name: string;
+	url: string;
+}
+
 export default function Case({ params }: { params: { id: string } }) {
 	const [caseData, setCaseData] = useState<FormData>();
-	const [casePhotoArr, setCasePhotoArr] = useState<string[] | []>([]);
+	const [casePhotoArr, setCasePhotoArr] = useState<CasePhotoArr[] | []>([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -66,7 +71,7 @@ export default function Case({ params }: { params: { id: string } }) {
 			}
 
 			try {
-				const data = (await getCasePhotos(params.id)) as string[] | [];
+				const data = (await getCasePhotos(params.id)) as CasePhotoArr[] | [];
 				setCasePhotoArr(data);
 			} catch (error) {
 				console.error("Error fetching case data:", error);

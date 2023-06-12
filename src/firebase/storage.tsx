@@ -18,13 +18,15 @@ export async function getCasePhotos(caseId: string) {
 
 	try {
 		const result = await listAll(storageRef);
-		const photoUrls = [];
-
-		for (const item of result.items) {
+		const photoUrls = result.items.map(async (item) => {
 			const downloadUrl = await getDownloadURL(item);
-			photoUrls.push(downloadUrl);
-		}
-		return photoUrls;
+			return {
+				name: item.name,
+				url: downloadUrl,
+			};
+		});
+
+		return Promise.all(photoUrls);
 	} catch (error) {
 		console.error("Error getting case photos:", error);
 		return [];

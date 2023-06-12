@@ -78,6 +78,8 @@ interface ChildComponentProps {
 
 export default function FormLayout(props: ChildComponentProps) {
 	const { mainData } = props;
+	console.log(mainData, "mainData");
+
 	const [customItem, setCustomItem] = useState<CustomItem[]>(mainData.custom);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 	const [showWarning, setShowWaring] = useState<boolean>(false);

@@ -3,6 +3,7 @@ export interface FormDefaultData extends FormData {
 		type: "edit" | "add" | "pending";
 		title: string;
 		saveBtnName: "更新" | "儲存";
+		uploadedPhoto: string[] | [];
 	};
 }
 

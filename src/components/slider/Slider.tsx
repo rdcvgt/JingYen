@@ -2,13 +2,15 @@
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/splide/css";
 import Image from "next/image";
+import { CasePhotoArr } from "@/app/(public)/case/[id]/page";
 
 interface ChildComponentProps {
-	casePhotoArr: string[] | [];
+	casePhotoArr: CasePhotoArr[];
 }
 
 export function PhotoSlider(props: ChildComponentProps) {
 	const { casePhotoArr } = props;
+	console.log(casePhotoArr);
 	if (casePhotoArr.length === 0) {
 		return <></>;
 	}
@@ -23,11 +25,11 @@ export function PhotoSlider(props: ChildComponentProps) {
 				autoHeight: true,
 				gap: "1rem",
 			}}>
-			{casePhotoArr.map((url, index) => {
+			{casePhotoArr.map((item, index) => {
 				return (
-					<SplideSlide key={index}>
+					<SplideSlide key={item.name}>
 						<Image
-							src={url}
+							src={item.url}
 							alt={`工程照片-${index + 1}`}
 							fill={true}
 							style={{ objectFit: "contain" }}

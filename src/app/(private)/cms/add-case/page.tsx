@@ -17,6 +17,7 @@ export default function AddCase() {
 			type: "add",
 			title: "新增工程案例",
 			saveBtnName: "儲存",
+			uploadedPhoto: [],
 		},
 		main: {
 			工程名稱: "",

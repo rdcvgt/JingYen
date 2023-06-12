@@ -8,6 +8,7 @@ import { secondaryBtn } from "@/components/button/Button.style";
 import { dangerousHint } from "@/components/hint/hint.style";
 import { Container, Title, Item, Input } from "../components/formLayout";
 import { getCaseData } from "@/firebase/database";
+import { getCasePhotos } from "@/firebase/storage";
 
 const SearchArea = styled.div`
 	margin-top: 40px;
@@ -29,19 +30,18 @@ const handleCaseId = (link: string): string => {
 	return caseId;
 };
 
-const handleDefaultFormData = (caseData: FormData) => {
-	console.log(caseData);
+const handleDefaultFormData = (caseData: FormData, photoArr: string[] | []) => {
 	const { main, custom } = caseData;
 	const formDefaultData: FormDefaultData = {
 		other: {
 			type: "edit",
 			title: "2. 編輯工程案例",
 			saveBtnName: "更新",
+			uploadedPhoto: photoArr,
 		},
 		main,
 		custom,
 	};
-	console.log(formDefaultData);
 	return formDefaultData;
 };
 
@@ -61,14 +61,16 @@ export default function EditCase() {
 		const caseId = handleCaseId(link);
 		setIsSearch(true);
 		const caseData = (await getCaseData(caseId)) as FormData;
+
 		setIsSearch(false);
 		if (!caseData) {
 			setSearchErrorMsg("查無案例，請檢查網址");
 			return;
 		}
-		setSearchErrorMsg(null);
 
-		setFormDefaultData(handleDefaultFormData(caseData));
+		const photoArr = (await getCasePhotos(caseId)) as string[] | [];
+		setSearchErrorMsg(null);
+		setFormDefaultData(handleDefaultFormData(caseData, photoArr));
 	};
 
 	return (
