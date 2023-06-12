@@ -21,6 +21,7 @@ export default function AddCase() {
 		caseStatus: "已完成",
 		caseDigits: "",
 		customItem: [],
+		saveBtnName: "儲存",
 	};
 
 	return (

@@ -7,6 +7,7 @@ export interface FormDefaultData {
 	caseStatus: "已完成" | "進行中";
 	caseDigits: string | number;
 	customItem: [];
+	saveBtnName: "儲存" | "更新";
 }
 
 export interface CustomItem {
