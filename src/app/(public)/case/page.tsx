@@ -5,7 +5,7 @@ import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import { PhotoSlider } from "@/components/slider/Slider";
 import { getCaseData } from "@/firebase/database";
-import { FormData } from "@/app/(private)/cms/add-case/page";
+import { FormData } from "@/app/(private)/cms/types";
 import { redirect } from "next/navigation";
 
 const Container = styled.div`
