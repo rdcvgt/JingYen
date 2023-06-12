@@ -4,6 +4,7 @@ import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import { defaultBtn, secondaryBtn } from "@/components/button/Button.style";
 import { defaultInput } from "@/components/input/Input.style";
+import { dangerousHint } from "@/components/hint/hint.style";
 import UploadArea from "./uploadArea";
 import CustomItemArea from "./customItemArea";
 import { addNewCase } from "@/firebase/database";
@@ -12,14 +13,14 @@ import Card from "@/components/card/Card";
 import { useRouter } from "next/navigation";
 import { FormDefaultData, CustomItem, FormData, CardInfo } from "../types";
 
-const Container = styled.div`
+export const Container = styled.div`
 	margin-left: 300px;
 	margin-top: 50px;
 	width: 1000px;
 	height: 100%;
 `;
 
-const Title = styled.div`
+export const Title = styled.div`
 	${theme.font.editTitleStyle}
 	border-bottom: 1px solid #ccc;
 `;
@@ -28,14 +29,14 @@ const FormArea = styled.div`
 	margin-top: 40px;
 `;
 
-const Item = styled.div`
+export const Item = styled.div`
 	margin-top: 30px;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
 	${defaultInput}
 `;
 
@@ -55,13 +56,7 @@ const Hint = styled.div`
 	position: fixed;
 	bottom: 110px;
 	right: 50px;
-	${theme.display.center}
-	width: 220px;
-	height: 40px;
-	background-color: ${theme.color.red[10]};
-	color: ${theme.color.red[50]};
-	border: 1px solid ${theme.color.red[50]};
-	border-radius: 5px;
+	${dangerousHint}
 `;
 
 const CancelButton = styled.div`
@@ -247,7 +242,7 @@ export default function FormLayout(props: ChildComponentProps) {
 			<ConfirmArea>
 				<CancelButton onClick={handleCancelClick}>取消</CancelButton>
 				<SaveButton onClick={handleSaveClick} isUploading={isUploading}>
-					{isUploading ? "請稍候" : "儲存"}
+					{isUploading ? "請稍候" : defaultData.saveBtnName}
 				</SaveButton>
 			</ConfirmArea>
 			{showWarning && <Hint>必填欄位不得為空</Hint>}
