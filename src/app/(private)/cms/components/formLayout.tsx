@@ -2,15 +2,24 @@
 import { useState, useRef } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
-import { defaultBtn, secondaryBtn } from "@/components/button/Button.style";
+import {
+	defaultBtn,
+	secondaryBtn,
+	dangerousBtn,
+} from "@/components/button/Button.style";
 import { defaultInput } from "@/components/input/Input.style";
 import { dangerousHint } from "@/components/hint/hint.style";
 import UploadArea from "./uploadArea";
 import CustomItemArea from "./customItemArea";
-import { addNewCase, updateCaseData } from "@/firebase/database";
+import {
+	addNewCase,
+	updateCaseData,
+	deleteCaseFromDatabase,
+} from "@/firebase/database";
 import {
 	uploadPhotoToStorage,
 	deletePhotoFromStorage,
+	deleteCaseFromStorage,
 } from "@/firebase/storage";
 import Card from "@/components/card/Card";
 import { useRouter } from "next/navigation";
@@ -60,6 +69,10 @@ const Hint = styled.div`
 	bottom: 110px;
 	right: 50px;
 	${dangerousHint}
+`;
+
+const DeleteButton = styled.div`
+	${dangerousBtn}
 `;
 
 const CancelButton = styled.div`
@@ -205,6 +218,29 @@ export default function FormLayout(props: ChildComponentProps) {
 		setCardInfo(CancelCardInfo);
 	};
 
+	const handleDeleteClick = () => {
+		const DeleteCardInfo: CardInfo = {
+			title: "確定要刪除此案例？",
+			message:
+				"選擇「確認」，此案例會被永久刪除。這個步驟通常會花費一些時間，完成刪除後頁面將重新整理。",
+			leftBtnName: "確認",
+			rightBtnName: "返回",
+			leftBtnFunc: async () => {
+				await deleteCaseFromDatabase(mainData.other.caseId);
+				await deleteCaseFromStorage(mainData.other.caseId);
+				window.location.href = "/cms/edit-case";
+			},
+			rightBtnFunc: () => {
+				setCardInfo(null);
+			},
+			closeFunc: () => {
+				setCardInfo(null);
+			},
+		};
+
+		setCardInfo(DeleteCardInfo);
+	};
+
 	return (
 		<Container>
 			<Title>{mainData.other.title}</Title>
@@ -272,7 +308,10 @@ export default function FormLayout(props: ChildComponentProps) {
 				<CustomItemArea customItem={customItem} setCustomItem={setCustomItem} />
 			</FormArea>
 			<ConfirmArea>
-				<CancelButton onClick={handleCancelClick}>取消</CancelButton>
+				{mainData.other.type === "edit" && (
+					<DeleteButton onClick={handleDeleteClick}>刪除案例</DeleteButton>
+				)}
+				<CancelButton onClick={handleCancelClick}>取消編輯</CancelButton>
 				<SaveButton onClick={handleSaveClick} isUploading={isUploading}>
 					{isUploading ? "請稍候" : mainData.other.saveBtnName}
 				</SaveButton>

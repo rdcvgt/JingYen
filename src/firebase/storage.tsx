@@ -55,3 +55,29 @@ export async function deletePhotoFromStorage(
 		console.error("Error deleting photos:", error);
 	}
 }
+
+export async function deleteCaseFromStorage(caseId: string | null | undefined) {
+	if (!caseId) {
+		return;
+	}
+
+	const folderPath = `case/${caseId}`;
+	await deleteFolderRecursively(folderPath);
+}
+
+export async function deleteFolderRecursively(folderPath: string) {
+	const folderRef = ref(storage, folderPath);
+
+	// 取得資料夾內的所有檔案和子資料夾
+	const { items } = await listAll(folderRef);
+
+	// 刪除資料夾內的所有檔案
+	const deleteFilePromises = items.map((item) => deleteObject(item));
+
+	try {
+		// 等待所有刪除動作完成
+		await Promise.all(deleteFilePromises);
+	} catch (error) {
+		console.error("刪除檔案", error);
+	}
+}
