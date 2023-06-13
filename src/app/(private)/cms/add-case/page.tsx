@@ -16,6 +16,7 @@ export default function AddCase() {
 		other: {
 			type: "add",
 			title: "新增工程案例",
+			caseId: null,
 			saveBtnName: "儲存",
 			uploadedPhoto: [],
 		},

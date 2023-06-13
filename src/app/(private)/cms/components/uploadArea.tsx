@@ -4,6 +4,7 @@ import { theme } from "@/app/globalStyles";
 import { secondaryBtn } from "@/components/button/Button.style";
 import { ChangeEvent } from "react";
 import Image from "next/image";
+import { FormDefaultData } from "../types";
 
 const Button = styled.div`
 	${secondaryBtn}
@@ -67,17 +68,27 @@ const DeleteArea = styled.div`
 interface ChildComponentProps {
 	selectedFiles: File[];
 	setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+	uploadedPhoto: FormDefaultData["other"]["uploadedPhoto"];
+	setUploadedPhoto: React.Dispatch<
+		React.SetStateAction<FormDefaultData["other"]["uploadedPhoto"] | []>
+	>;
+	setDeleteUploadedPhoto: React.Dispatch<React.SetStateAction<string[] | []>>;
 }
 
 export default function UploadArea(props: ChildComponentProps) {
-	const selectedFiles = props.selectedFiles;
-	const setSelectedFiles = props.setSelectedFiles;
+	const {
+		selectedFiles,
+		setSelectedFiles,
+		uploadedPhoto,
+		setUploadedPhoto,
+		setDeleteUploadedPhoto,
+	} = props;
+
 	const short = require("short-uuid");
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files) {
 			const files = Array.from(event.target.files);
-			console.log(files);
 
 			const maxSize = 5 * 1024 * 1024; // 限制檔案大小為 5MB
 
@@ -108,6 +119,17 @@ export default function UploadArea(props: ChildComponentProps) {
 		});
 	};
 
+	const handleDeleteUploadedPhoto = (index: number) => {
+		setDeleteUploadedPhoto((prev) => {
+			return [...prev, uploadedPhoto[index].name];
+		});
+		setUploadedPhoto((prev) => {
+			const updatedState = [...prev];
+			updatedState.splice(index, 1);
+			return updatedState;
+		});
+	};
+
 	return (
 		<>
 			<label htmlFor="file-input">
@@ -124,6 +146,23 @@ export default function UploadArea(props: ChildComponentProps) {
 
 			<PreviewArea>
 				{/* 顯示選擇的圖片 */}
+				{uploadedPhoto.map((item, index) => (
+					<ImageBox key={index}>
+						<Image
+							src={item.url}
+							alt={`Image ${item.name}`}
+							style={{ objectFit: "contain" }}
+							width={100}
+							height={100}
+						/>
+						<DeleteArea
+							onClick={() => {
+								handleDeleteUploadedPhoto(index);
+							}}>
+							刪除
+						</DeleteArea>
+					</ImageBox>
+				))}
 				{selectedFiles.map((file, index) => (
 					<ImageBox key={index}>
 						<Image

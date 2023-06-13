@@ -30,12 +30,17 @@ const handleCaseId = (link: string): string => {
 	return caseId;
 };
 
-const handleDefaultFormData = (caseData: FormData, photoArr: string[] | []) => {
+const handleDefaultFormData = (
+	caseData: FormData,
+	photoArr: FormDefaultData["other"]["uploadedPhoto"] | [],
+	caseId: string
+) => {
 	const { main, custom } = caseData;
 	const formDefaultData: FormDefaultData = {
 		other: {
 			type: "edit",
 			title: "2. 編輯工程案例",
+			caseId,
 			saveBtnName: "更新",
 			uploadedPhoto: photoArr,
 		},
@@ -68,9 +73,11 @@ export default function EditCase() {
 			return;
 		}
 
-		const photoArr = (await getCasePhotos(caseId)) as string[] | [];
+		const photoArr = (await getCasePhotos(caseId)) as
+			| FormDefaultData["other"]["uploadedPhoto"]
+			| [];
 		setSearchErrorMsg(null);
-		setFormDefaultData(handleDefaultFormData(caseData, photoArr));
+		setFormDefaultData(handleDefaultFormData(caseData, photoArr, caseId));
 	};
 
 	return (

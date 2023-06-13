@@ -7,8 +7,11 @@ import { defaultInput } from "@/components/input/Input.style";
 import { dangerousHint } from "@/components/hint/hint.style";
 import UploadArea from "./uploadArea";
 import CustomItemArea from "./customItemArea";
-import { addNewCase } from "@/firebase/database";
-import { uploadPhotoToStorage } from "@/firebase/storage";
+import { addNewCase, updateCaseData } from "@/firebase/database";
+import {
+	uploadPhotoToStorage,
+	deletePhotoFromStorage,
+} from "@/firebase/storage";
 import Card from "@/components/card/Card";
 import { useRouter } from "next/navigation";
 import { FormDefaultData, CustomItem, FormData, CardInfo } from "../types";
@@ -78,9 +81,14 @@ interface ChildComponentProps {
 
 export default function FormLayout(props: ChildComponentProps) {
 	const { mainData } = props;
-	console.log(mainData, "mainData");
 
 	const [customItem, setCustomItem] = useState<CustomItem[]>(mainData.custom);
+	const [uploadedPhoto, setUploadedPhoto] = useState<
+		FormDefaultData["other"]["uploadedPhoto"]
+	>(mainData.other.uploadedPhoto);
+	const [deleteUploadedPhoto, setDeleteUploadedPhoto] = useState<string[] | []>(
+		[]
+	);
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 	const [showWarning, setShowWaring] = useState<boolean>(false);
 	const [cardInfo, setCardInfo] = useState<CardInfo | null>(null);
@@ -109,7 +117,9 @@ export default function FormLayout(props: ChildComponentProps) {
 					| "進行中"
 					| undefined,
 				模板數量: caseDigitsRef.current?.value,
-				工程照片: selectedFiles.map((file) => file.name),
+				工程照片: selectedFiles
+					.map((file) => file.name)
+					.concat(uploadedPhoto.map((file) => file.name)),
 			},
 			custom: customItem,
 		};
@@ -126,14 +136,28 @@ export default function FormLayout(props: ChildComponentProps) {
 			setShowWaring(false);
 		}
 
-		//取得 caseId並儲存照片到資料庫
+		//取得 caseId並儲存照片、case data到資料庫
 		setIsUploading(true);
-		const caseId = await addNewCase(formData);
+		const caseId =
+			mainData.other.type === "edit"
+				? mainData.other.caseId
+				: await addNewCase(formData);
+
+		if (caseId && mainData.other.type === "edit") {
+			await updateCaseData(caseId, formData);
+		}
 		if (caseId && formData.main.工程照片.length > 0) {
 			await uploadPhotoToStorage(caseId, selectedFiles);
 		}
+		if (
+			caseId &&
+			mainData.other.type === "edit" &&
+			deleteUploadedPhoto.length > 0
+		) {
+			await deletePhotoFromStorage(caseId, deleteUploadedPhoto);
+		}
 
-		//傳遞卡片訊息並顯示
+		//點及儲存後顯示卡片訊息
 		const SuccessCardInfo: CardInfo = {
 			title: mainData.other.type === "add" ? "新增成功" : "儲存成功",
 			message: "",
@@ -163,7 +187,7 @@ export default function FormLayout(props: ChildComponentProps) {
 		//傳遞卡片訊息並顯示
 		const CancelCardInfo: CardInfo = {
 			title: "是否取消編輯？",
-			message: "選擇「是」，當前編輯資料將會清除。",
+			message: "選擇「是」，當前編輯進度將會遺失。",
 			leftBtnName: "是",
 			rightBtnName: "否",
 			leftBtnFunc: () => {
@@ -190,6 +214,9 @@ export default function FormLayout(props: ChildComponentProps) {
 					<UploadArea
 						selectedFiles={selectedFiles}
 						setSelectedFiles={setSelectedFiles}
+						uploadedPhoto={uploadedPhoto}
+						setUploadedPhoto={setUploadedPhoto}
+						setDeleteUploadedPhoto={setDeleteUploadedPhoto}
 					/>
 				</Item>
 				<Item>

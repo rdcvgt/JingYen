@@ -1,4 +1,4 @@
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./init";
 import { FormData } from "@/app/(private)/cms/types";
 
@@ -32,4 +32,12 @@ export async function getCaseData(caseId: string) {
 	}
 }
 
-//
+export async function updateCaseData(caseId: string, formData: FormData) {
+	const caseRef = doc(db, `case/${caseId}`);
+	try {
+		await setDoc(caseRef, formData);
+		console.log("Case data updated successfully");
+	} catch (error) {
+		console.error("Error updating case data:", error);
+	}
+}

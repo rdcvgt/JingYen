@@ -1,5 +1,11 @@
 import { storage } from "./init";
-import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import {
+	ref,
+	uploadBytes,
+	listAll,
+	getDownloadURL,
+	deleteObject,
+} from "firebase/storage";
 
 export async function uploadPhotoToStorage(caseId: string, files: File[]) {
 	const storageRef = ref(storage, `case/${caseId}`); // 設定儲存路徑
@@ -30,5 +36,22 @@ export async function getCasePhotos(caseId: string) {
 	} catch (error) {
 		console.error("Error getting case photos:", error);
 		return [];
+	}
+}
+
+export async function deletePhotoFromStorage(
+	caseId: string | null | undefined,
+	deleteUploadedPhoto: string[]
+) {
+	const storageRef = ref(storage, `case/${caseId}`);
+
+	try {
+		for (const photoName of deleteUploadedPhoto) {
+			const photoRef = ref(storageRef, photoName);
+			await deleteObject(photoRef);
+		}
+		console.log("Photos deleted successfully.");
+	} catch (error) {
+		console.error("Error deleting photos:", error);
 	}
 }

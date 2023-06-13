@@ -10,7 +10,6 @@ interface ChildComponentProps {
 
 export function PhotoSlider(props: ChildComponentProps) {
 	const { casePhotoArr } = props;
-	console.log(casePhotoArr);
 	if (casePhotoArr.length === 0) {
 		return <></>;
 	}
