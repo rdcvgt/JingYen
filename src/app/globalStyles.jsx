@@ -157,6 +157,11 @@ export const theme = {
 			line-height: 1.4;
 			font-weight: 300;
 		`,
+		pageTitleStyle: css`
+			font-size: 2.5rem;
+			line-height: 1.4;
+			font-weight: 600;
+		`,
 	},
 };
 

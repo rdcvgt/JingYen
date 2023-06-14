@@ -3,71 +3,100 @@
 import { useEffect, useState } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
-import { PhotoSlider } from "@/components/slider/Slider";
-import { getCaseData } from "@/firebase/database";
+import { secondaryBtn, defaultBtn } from "@/components/button/Button.style";
 import { FormData } from "@/app/(private)/cms/types";
-import { redirect } from "next/navigation";
 
 const Container = styled.div`
-	margin: 0 auto;
+	margin: 120px auto;
 	width: 1120px;
 	height: 100%;
 `;
 
-const CaseArea = styled.div`
-	width: 792px;
-	height: auto;
-	padding-top: 120px;
-	margin: 0 auto;
+const Condition = styled.div`
+	padding-bottom: 20px;
+	border-bottom: 1px solid #ccc;
+	width: 100%;
 `;
 
-const PhotoArea = styled.div`
-	margin: 0 auto;
-	overflow: hidden;
+const ConditionTitle = styled.div`
+	${theme.font.pageTitleStyle}
+	margin-bottom: 20px;
+	color: ${theme.color.green[70]};
+`;
+
+const OptionsArea = styled.div`
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 50px;
+	gap: 20px;
+	margin-bottom: 20px;
+`;
+
+const Option = styled.div`
+	${secondaryBtn}
+	width: 10%;
+	height: 100%;
+	border-radius: 50px;
+`;
+
+const Result = styled.div`
+	width: 100%;
+	margin-top: 20px;
+`;
+
+const Case = styled.div`
+	border-bottom: 1px solid ${theme.color.beige[10]};
+	padding: 20px 0;
 `;
 
 const Title = styled.div`
-	margin-top: 30px;
 	${theme.font.caseTitleStyle}
-	color: ${theme.color.green[80]};
-`;
-
-const Description = styled.div`
-	margin: 30px 0 50px 0;
-	${theme.font.caseDescStyle}
-	color: ${theme.color.neutral[70]};
+	color: ${theme.color.green[70]};
+	padding-bottom: 10px;
 `;
 
 const Item = styled.div`
+	${theme.font.caseDescStyle}
 	display: flex;
-	margin-top: 10px;
+	align-items: center;
+	padding-top: 5px;
 `;
 
-const Detail = styled.div`
-	display: flex;
-`;
+const Detail = styled.div``;
 
-export default function Case() {
+export default function SearchCase() {
 	const [caseData, setCaseData] = useState<FormData | false>();
+
+	useEffect(() => {}, []);
 
 	return (
 		<Container>
-			<CaseArea>
-				{/* <PhotoArea>
-					<PhotoSlider />
-				</PhotoArea> */}
-				<Title>case</Title>
-				<Description>
+			<ConditionTitle>成功案例</ConditionTitle>
+			<Condition>
+				<OptionsArea>
+					工程進度：
+					<Option>已完成</Option>
+					<Option>進行中</Option>
+				</OptionsArea>
+				<OptionsArea>
+					工程類型：
+					<Option>民宅</Option>
+					<Option>企業</Option>
+					<Option>公有</Option>
+				</OptionsArea>
+			</Condition>
+			<Result>
+				<Case>
+					<Title>標題</Title>
 					<Item>
-						業主：
-						<Detail>猛揮營造股份有限公司</Detail>
+						業主：<Detail>朋勝委</Detail>
 					</Item>
 					<Item>
-						模板數量：
-						<Detail>26,533 ㎡</Detail>
+						模板數量：<Detail>wqerqwrqwer ㎡</Detail>
 					</Item>
-				</Description>
-			</CaseArea>
+				</Case>
+			</Result>
 		</Container>
 	);
 }
