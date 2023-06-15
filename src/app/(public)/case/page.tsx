@@ -88,7 +88,6 @@ export default function SearchCase() {
 	const [isCompleted, setIsCompleted] = useState<boolean>(true);
 	const [isOngoing, setIsOngoing] = useState<boolean>(false);
 	const [isPersonal, setIsPersonal] = useState<boolean>(true);
-	const [isEnterprise, setIsEnterprise] = useState<boolean>(true);
 	const [isGovernment, setIsGovernment] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -112,7 +111,6 @@ export default function SearchCase() {
 				...caseData.filter((el) => el.mainField.工程類型 === "公有")
 			);
 		}
-
 		const finalData = [] as MainFields[];
 		if (isCompleted) {
 			finalData.push(
@@ -126,14 +124,7 @@ export default function SearchCase() {
 		}
 
 		setFilteredData(finalData);
-	}, [
-		caseData,
-		isPersonal,
-		isEnterprise,
-		isGovernment,
-		isCompleted,
-		isOngoing,
-	]);
+	}, [caseData, isPersonal, isGovernment, isCompleted, isOngoing]);
 
 	return (
 		<Container>
@@ -166,13 +157,6 @@ export default function SearchCase() {
 							setIsPersonal(!isPersonal);
 						}}>
 						民宅
-					</Option>
-					<Option
-						isSelected={isEnterprise}
-						onClick={() => {
-							setIsEnterprise(!isEnterprise);
-						}}>
-						企業
 					</Option>
 					<Option
 						isSelected={isGovernment}
