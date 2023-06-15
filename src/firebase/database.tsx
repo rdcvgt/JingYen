@@ -3,6 +3,7 @@ import {
 	addDoc,
 	doc,
 	getDoc,
+	getDocs,
 	setDoc,
 	deleteDoc,
 } from "firebase/firestore";
@@ -56,4 +57,24 @@ export async function deleteCaseFromDatabase(caseId: string | null) {
 
 	const caseRef = doc(db, "case", caseId);
 	await deleteDoc(caseRef);
+}
+
+export interface MainFields {
+	caseId: string;
+	mainField: FormData["main"];
+}
+
+export async function getMainFieldsFromCases() {
+	const collectionPath = "case";
+
+	const querySnapshot = await getDocs(collection(db, collectionPath));
+
+	const mainFields: MainFields[] = [];
+	querySnapshot.forEach((doc) => {
+		const caseId = doc.id; // 取得文件的 ID
+		const mainField = doc.data().main;
+		mainFields.push({ caseId, mainField });
+	});
+
+	return mainFields;
 }
