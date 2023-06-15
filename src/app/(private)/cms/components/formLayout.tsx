@@ -295,8 +295,8 @@ export default function FormLayout(props: ChildComponentProps) {
 				<Item>
 					模板數量：
 					<Input
-						type="number"
-						placeholder="必填，僅限輸入數字"
+						type="text"
+						placeholder="必填，請輸入數值（含千分位與小數點）"
 						ref={caseDigitsRef}
 						defaultValue={mainData.main.模板數量}
 					/>{" "}
