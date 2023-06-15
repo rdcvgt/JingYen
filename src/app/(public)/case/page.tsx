@@ -104,12 +104,7 @@ export default function SearchCase() {
 		const newData = [] as MainFields[];
 		if (isPersonal) {
 			newData.push(
-				...caseData.filter((el) => el.mainField.工程類型 === "民宅")
-			);
-		}
-		if (isEnterprise) {
-			newData.push(
-				...caseData.filter((el) => el.mainField.工程類型 === "企業")
+				...caseData.filter((el) => el.mainField.工程類型 === "民間")
 			);
 		}
 		if (isGovernment) {
