@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import { defaultInput } from "@/components/input/Input.style";
-import { css } from "@emotion/react";
-import { secondaryBtn, defaultBtn } from "@/components/button/Button.style";
-import { getMainFieldsFromCases, MainFields } from "@/firebase/database";
+import { defaultBtn } from "@/components/button/Button.style";
+import emailjs from "@emailjs/browser";
 
 const Container = styled.div`
 	margin: 120px auto;
@@ -83,6 +82,26 @@ const SubmitBtn = styled.div`
 `;
 
 export default function SearchCase() {
+	const form = useRef(null);
+
+	const handleSendEmail = async () => {
+		const test = form.current;
+		const serviceId = process.env.NEXT_PUBLIC_SERVICE_ID;
+		const templateId = process.env.NEXT_PUBLIC_TEMPLATE_ID;
+		const publicKey = process.env.NEXT_PUBLIC_PUBLIC_KEY;
+
+		if (!test || !serviceId || !templateId || !publicKey) return;
+
+		await emailjs.sendForm(serviceId, templateId, test, publicKey).then(
+			(result) => {
+				console.log(result.text);
+			},
+			(error) => {
+				console.log(error.text);
+			}
+		);
+	};
+
 	return (
 		<Container>
 			<LeftArea>
@@ -92,57 +111,38 @@ export default function SearchCase() {
 
 			<RightArea>
 				<FormArea>
-					<Item>
-						姓名：
-						<Input
-							placeholder="請輸入您的姓名"
-							// ref={caseNameRef}
-							// defaultValue={mainData.main.工程名稱}
-						/>
-					</Item>
-					<Item>
-						電子信箱：
-						<Input
-							placeholder="請輸入您的工作電子信箱"
-							// ref={caseNameRef}
-							// defaultValue={mainData.main.工程名稱}
-						/>
-					</Item>
-					<Item>
-						聯絡電話：
-						<Input
-							placeholder="請輸入您的電話"
-							// ref={caseNameRef}
-							// defaultValue={mainData.main.工程名稱}
-						/>
-					</Item>
-					<Item>
-						公司名稱：
-						<Input
-							placeholder="請輸入您的公司名稱"
-							// ref={caseNameRef}
-							// defaultValue={mainData.main.工程名稱}
-						/>
-					</Item>
-					<Item>
-						工程地點：
-						<Input
-							placeholder="請輸入工程場址"
-							// ref={caseNameRef}
-							// defaultValue={mainData.main.工程名稱}
-						/>
-					</Item>
-					<LongItem>
-						需求說明：
-						<LongInput
-							placeholder="請簡單描述工程需求，我們將更能了解初步狀況並進行評估。"
-							// ref={caseNameRef}
-							// defaultValue={mainData.main.工程名稱}
-						/>
-					</LongItem>
-					<ButtonItem>
-						<SubmitBtn>聯繫業務</SubmitBtn>
-					</ButtonItem>
+					<form ref={form}>
+						<Item>
+							姓名：
+							<Input placeholder="請輸入您的姓名" name="name" />
+						</Item>
+						<Item>
+							電子信箱：
+							<Input name="email" placeholder="請輸入您的工作電子信箱" />
+						</Item>
+						<Item>
+							聯絡電話：
+							<Input name="phone" placeholder="請輸入您的電話" />
+						</Item>
+						<Item>
+							公司名稱：
+							<Input name="company" placeholder="請輸入您的公司名稱" />
+						</Item>
+						<Item>
+							工程地點：
+							<Input name="place" placeholder="請輸入工程場址" />
+						</Item>
+						<LongItem>
+							需求說明：
+							<LongInput
+								name="message"
+								placeholder="請簡單描述工程需求，我們將更能了解初步狀況並進行評估。"
+							/>
+						</LongItem>
+						<ButtonItem>
+							<SubmitBtn onClick={handleSendEmail}>聯繫業務</SubmitBtn>
+						</ButtonItem>
+					</form>
 				</FormArea>
 			</RightArea>
 		</Container>
