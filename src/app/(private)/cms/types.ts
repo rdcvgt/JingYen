@@ -16,7 +16,7 @@ export interface CustomItem {
 interface Main {
 	工程名稱: string | undefined;
 	工程業主: string | undefined;
-	工程類型: "民宅" | "企業" | "公有" | undefined;
+	工程類型: "民間" | "公有" | undefined;
 	工程狀態: "已完成" | "進行中" | undefined;
 	模板數量: string | undefined;
 	工程照片: string[];

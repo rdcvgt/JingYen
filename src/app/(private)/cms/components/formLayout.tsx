@@ -1,16 +1,21 @@
 "use client";
 import { useState, useRef } from "react";
-import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
+import { useRouter } from "next/navigation";
+import { FormDefaultData, CustomItem, FormData, CardInfo } from "../types";
+
+import UploadArea from "./uploadArea";
+import CustomItemArea from "./customItemArea";
+import { theme } from "@/app/globalStyles";
 import {
 	defaultBtn,
 	secondaryBtn,
 	dangerousBtn,
 } from "@/components/button/Button.style";
+import Card from "@/components/card/Card";
 import { defaultInput } from "@/components/input/Input.style";
 import { dangerousHint } from "@/components/hint/hint.style";
-import UploadArea from "./uploadArea";
-import CustomItemArea from "./customItemArea";
+
 import {
 	addNewCase,
 	updateCaseData,
@@ -21,9 +26,6 @@ import {
 	deletePhotoFromStorage,
 	deleteCaseFromStorage,
 } from "@/firebase/storage";
-import Card from "@/components/card/Card";
-import { useRouter } from "next/navigation";
-import { FormDefaultData, CustomItem, FormData, CardInfo } from "../types";
 
 export const Container = styled.div`
 	margin-left: 300px;
@@ -120,11 +122,7 @@ export default function FormLayout(props: ChildComponentProps) {
 			main: {
 				工程名稱: caseNameRef.current?.value,
 				工程業主: caseOwnerRef.current?.value,
-				工程類型: caseTypeRef.current?.value as
-					| "民宅"
-					| "企業"
-					| "公有"
-					| undefined,
+				工程類型: caseTypeRef.current?.value as "民間" | "公有" | undefined,
 				工程狀態: caseStatusRef.current?.value as
 					| "已完成"
 					| "進行中"
@@ -278,8 +276,7 @@ export default function FormLayout(props: ChildComponentProps) {
 						name="type"
 						ref={caseTypeRef}
 						defaultValue={mainData.main.工程類型}>
-						<option value="民宅">民宅</option>
-						<option value="企業">企業</option>
+						<option value="民間">民間</option>
 						<option value="公有">公有</option>
 					</Select>
 				</Item>
@@ -298,8 +295,8 @@ export default function FormLayout(props: ChildComponentProps) {
 				<Item>
 					模板數量：
 					<Input
-						type="number"
-						placeholder="必填，僅限輸入數字"
+						type="text"
+						placeholder="必填，請輸入數值（含千分位與小數點）"
 						ref={caseDigitsRef}
 						defaultValue={mainData.main.模板數量}
 					/>{" "}

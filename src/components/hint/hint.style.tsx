@@ -1,7 +1,7 @@
 import { theme } from "@/app/globalStyles";
 import { css } from "@emotion/react";
 
-const defaultStyle = css`
+export const defaultStyle = css`
 	${theme.display.center}
 	width: 220px;
 	height: 40px;
@@ -20,4 +20,11 @@ export const dangerousHint = css`
 	background-color: ${theme.color.red[10]};
 	color: ${theme.color.red[50]};
 	border: 1px solid ${theme.color.red[50]};
+`;
+
+export const neutralHint = css`
+	${defaultStyle}
+	background-color: ${theme.color.beige[10]};
+	color: ${theme.color.beige[50]};
+	border: 1px solid ${theme.color.beige[50]};
 `;
