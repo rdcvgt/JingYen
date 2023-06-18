@@ -1,8 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { auth } from "@/firebase/init";
+import { loginToCMS } from "@/firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import {
@@ -10,10 +14,8 @@ import {
 	neutralHint,
 	successfulHint,
 } from "@/components/hint/hint.style";
-
 import { defaultInput } from "@/components/input/Input.style";
 import { defaultBtn } from "@/components/button/Button.style";
-import loginToCMS from "@/firebase/auth";
 
 const Container = styled.div`
 	margin: 120px auto;
@@ -133,6 +135,16 @@ export default function SearchCase() {
 			setHinMessage({ status: "fail", message: result.message });
 		}
 	};
+
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				router.push("/cms/add-case");
+			} else {
+				return;
+			}
+		});
+	}, []);
 
 	return (
 		<Container>
