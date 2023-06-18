@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
 import {
-	defaultStyle,
 	dangerousHint,
 	neutralHint,
 	successfulHint,
@@ -113,7 +111,7 @@ const Hint = styled.div<{ hintMessage: HintMessage }>`
 		return dangerousHint;
 	}};
 
-	width: 250px;
+	width: auto;
 	margin-right: 20px;
 `;
 

@@ -3,9 +3,10 @@ import { css } from "@emotion/react";
 
 export const defaultStyle = css`
 	${theme.display.center}
-	width: 220px;
+	width: auto;
 	height: 40px;
 	border-radius: 5px;
+	padding: 10px;
 `;
 
 export const successfulHint = css`

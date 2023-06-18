@@ -2,6 +2,9 @@
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { theme } from "@/app/globalStyles";
+import { auth } from "@/firebase/init";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const Side = styled.div`
 	background-color: ${theme.color.green[70]};
@@ -27,13 +30,21 @@ const Button = styled.div`
 `;
 
 export default function Sidebar() {
+	const router = useRouter();
+	const handleSignOutClick = () => {
+		signOut(auth)
+			.then(() => {
+				router.push("/login");
+			})
+			.catch((error) => {
+				router.push("/login");
+			});
+	};
+
 	return (
 		<Side>
 			<Link href="/" passHref>
 				<Button>回首頁</Button>
-			</Link>
-			<Link href="/case" passHref>
-				<Button>回案例</Button>
 			</Link>
 			<Link href="/cms/add-case" passHref>
 				<Button>新增案件</Button>
@@ -42,7 +53,7 @@ export default function Sidebar() {
 				<Button>編輯案例</Button>
 			</Link>
 			<Link href="/" passHref>
-				<Button>登出</Button>
+				<Button onClick={handleSignOutClick}>登出</Button>
 			</Link>
 		</Side>
 	);

@@ -1,14 +1,23 @@
 "use client";
 
-import { useState, useRef } from "react";
 import styled from "@emotion/styled";
-import FormLayout from "../components/formLayout";
-import { FormDefaultData, FormData } from "../types";
-import { secondaryBtn } from "@/components/button/Button.style";
-import { dangerousHint } from "@/components/hint/hint.style";
-import { Container, Title, Item, Input } from "../components/formLayout";
+import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { auth } from "@/firebase/init";
+import { onAuthStateChanged } from "firebase/auth";
+
 import { getCaseData } from "@/firebase/database";
 import { getCasePhotos } from "@/firebase/storage";
+
+import { FormDefaultData, FormData } from "../types";
+import FormLayout, {
+	Container,
+	Title,
+	Item,
+	Input,
+} from "../components/formLayout";
+import { secondaryBtn } from "@/components/button/Button.style";
+import { dangerousHint } from "@/components/hint/hint.style";
 
 const SearchArea = styled.div`
 	margin-top: 40px;
@@ -79,6 +88,17 @@ export default function EditCase() {
 		setSearchErrorMsg(null);
 		setFormDefaultData(handleDefaultFormData(caseData, photoArr, caseId));
 	};
+
+	const router = useRouter();
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				return;
+			} else {
+				router.push("/login");
+			}
+		});
+	}, []);
 
 	return (
 		<>

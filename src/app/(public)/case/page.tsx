@@ -128,7 +128,7 @@ export default function SearchCase() {
 
 	return (
 		<Container>
-			<ConditionTitle>成功案例</ConditionTitle>
+			<ConditionTitle>工程實績</ConditionTitle>
 			<Condition>
 				<OptionsArea>
 					工程進度：
