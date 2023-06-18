@@ -65,7 +65,7 @@ export default function Navbar() {
 						<Button>編輯後台</Button>
 					</Link>
 					<Link href="/case" passHref>
-						<Page>成功案例</Page>
+						<Page>工程實績</Page>
 					</Link>
 					<Link href="/about-us" passHref>
 						<Page>關於我們</Page>
