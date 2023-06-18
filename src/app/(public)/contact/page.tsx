@@ -113,7 +113,7 @@ const Hint = styled.div<{ hintMessage: HintMessage }>`
 		return dangerousHint;
 	}};
 
-	width: 250px;
+	width: auto;
 	margin-right: 20px;
 `;
 

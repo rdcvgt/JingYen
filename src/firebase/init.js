@@ -14,7 +14,8 @@ const app = initializeApp({
 	messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
 	appId: process.env.NEXT_PUBLIC_APP_ID,
 });
-// export const auth = getAuth(app);
+
+export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 // export const provider = new GoogleAuthProvider();

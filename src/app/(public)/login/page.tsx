@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { theme } from "@/app/globalStyles";
 import styled from "@emotion/styled";
@@ -12,6 +13,7 @@ import {
 
 import { defaultInput } from "@/components/input/Input.style";
 import { defaultBtn } from "@/components/button/Button.style";
+import loginToCMS from "@/firebase/auth";
 
 const Container = styled.div`
 	margin: 120px auto;
@@ -94,21 +96,21 @@ const Hint = styled.div<{ hintMessage: HintMessage }>`
 		return dangerousHint;
 	}};
 
-	width: 250px;
+	width: auto;
 	margin-right: 20px;
 `;
 
 export default function SearchCase() {
+	const router = useRouter();
 	const form = useRef(null);
 	const [accountValue, setAccountValue] = useState<string>("");
 	const [passwordValue, setPasswordValue] = useState<string>("");
-
 	const [hintMessage, setHinMessage] = useState<HintMessage>({
 		status: null,
 		message: null,
 	});
 
-	const handleLogin = () => {
+	const handleLogin = async () => {
 		setHinMessage({ status: null, message: null });
 
 		if (accountValue === "") {
@@ -122,13 +124,21 @@ export default function SearchCase() {
 		}
 
 		setHinMessage({ status: "pending", message: "請稍候..." });
+
+		const result = await loginToCMS(accountValue, passwordValue);
+		if (result.status) {
+			setHinMessage({ status: "success", message: result.message });
+			router.push("/cms/add-case");
+		} else {
+			setHinMessage({ status: "fail", message: result.message });
+		}
 	};
 
 	return (
 		<Container>
 			<LeftArea>
 				<Title>登入後台</Title>
-				<Description>請輸入帳號密碼後登入。</Description>
+				<Description>請輸入帳號及密碼後登入。</Description>
 			</LeftArea>
 
 			<RightArea>
