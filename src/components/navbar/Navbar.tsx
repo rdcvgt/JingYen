@@ -1,7 +1,10 @@
 "use client";
+
+import Image from "next/image";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { theme } from "@/app/globalStyles";
+import logo from "@/photo/logo/logo.png";
 
 const Nav = styled.div`
 	background-color: ${theme.color.white};
@@ -24,9 +27,18 @@ const Container = styled.div`
 	margin: 0 auto;
 `;
 
-const LeftBlock = styled.div``;
+const LeftBlock = styled.div`
+	cursor: pointer;
+	border: 1px solid #ccc;
+`;
 
-const Logo = styled.div``;
+const Logo = styled.div`
+	width: auto;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: start;
+`;
 
 const RightBlock = styled.div`
 	display: flex;
@@ -47,6 +59,7 @@ const Button = styled.div`
 	justify-content: center;
 	color: #fff;
 	transition: all 0.3s;
+	cursor: pointer;
 
 	&:hover {
 		background-color: ${theme.color.green[50]};
@@ -58,8 +71,13 @@ export default function Navbar() {
 		<Nav>
 			<Container>
 				<LeftBlock>
-					<Logo>瑾諺工程</Logo>
+					<Link href="/" passHref>
+						<Logo>
+							<Image src={logo} alt="瑾諺工程" width={120} />
+						</Logo>
+					</Link>
 				</LeftBlock>
+
 				<RightBlock>
 					<Link href="/cms/add-case" passHref>
 						<Button>編輯後台</Button>
