@@ -1,98 +1,132 @@
 "use client";
 
-import Image from "next/image";
-import styled from "@emotion/styled";
 import Link from "next/link";
-import { theme } from "@/app/globalStyles";
-import logo from "@/photo/logo/logo.png";
+import { useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 
-const Nav = styled.div`
-	background-color: ${theme.color.white};
-	position: fixed;
-	top: 0;
-	left: 0;
-	height: 68px;
-	width: 100%;
-	border-bottom: 1px solid ${theme.color.neutral[10]};
-`;
+const pages = [
+	{ name: "編輯後台", url: "/cms/add-case" },
+	{ name: "工程實績", url: "/case" },
+	{ name: "關於我們", url: "/about-us" },
+	{ name: "聯繫業務", url: "/contact" },
+];
 
-const Container = styled.div`
-	max-width: 1200px;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	color: #333;
-	padding: 0 40px 0 40px;
-	margin: 0 auto;
-`;
+function ResponsiveAppBar() {
+	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
-const LeftBlock = styled.div`
-	cursor: pointer;
-	border: 1px solid #ccc;
-`;
+	const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorElNav(event.currentTarget);
+	};
+	const handleCloseNavMenu = () => {
+		setAnchorElNav(null);
+	};
 
-const Logo = styled.div`
-	width: auto;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: start;
-`;
-
-const RightBlock = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 30px;
-`;
-
-const Page = styled.div``;
-
-const Button = styled.div`
-	width: 100px;
-	height: 40px;
-	border-radius: 30px;
-	background-color: ${theme.color.green[70]};
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #fff;
-	transition: all 0.3s;
-	cursor: pointer;
-
-	&:hover {
-		background-color: ${theme.color.green[50]};
-	}
-`;
-
-export default function Navbar() {
 	return (
-		<Nav>
-			<Container>
-				<LeftBlock>
-					<Link href="/" passHref>
-						<Logo>
-							<Image src={logo} alt="瑾諺工程" width={120} />
-						</Logo>
-					</Link>
-				</LeftBlock>
+		<AppBar
+			position="fixed"
+			color="transparent"
+			sx={{
+				WebkitBackdropFilter: "saturate(180%) blur(5px)",
+				backdropFilter: "saturate(180%) blur(5px)",
+				backgroundColor: "rgba(256, 256, 256 ,0.7)",
+				boxShadow: "none",
+				borderBottom: "1px solid #eaeaea",
+			}}>
+			<Container maxWidth="xl">
+				<Toolbar disableGutters>
+					<Typography
+						variant="h6"
+						noWrap
+						component="a"
+						href="/"
+						sx={{
+							mr: 2,
+							display: { xs: "none", md: "flex" },
+							fontFamily: "monospace",
+							fontWeight: 700,
+							letterSpacing: ".3rem",
+							color: "inherit",
+							textDecoration: "none",
+						}}>
+						瑾諺工程
+					</Typography>
 
-				<RightBlock>
-					<Link href="/cms/add-case" passHref>
-						<Button>編輯後台</Button>
-					</Link>
-					<Link href="/case" passHref>
-						<Page>工程實績</Page>
-					</Link>
-					<Link href="/about-us" passHref>
-						<Page>關於我們</Page>
-					</Link>
-					<Link href="/contact" passHref>
-						<Button>聯繫業務</Button>
-					</Link>
-				</RightBlock>
+					<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+						<IconButton
+							size="large"
+							aria-label="account of current user"
+							aria-controls="menu-appbar"
+							aria-haspopup="true"
+							onClick={handleOpenNavMenu}
+							color="inherit">
+							<MenuIcon />
+						</IconButton>
+						<Menu
+							id="menu-appbar"
+							anchorEl={anchorElNav}
+							anchorOrigin={{
+								vertical: "bottom",
+								horizontal: "left",
+							}}
+							keepMounted
+							transformOrigin={{
+								vertical: "top",
+								horizontal: "left",
+							}}
+							open={Boolean(anchorElNav)}
+							onClose={handleCloseNavMenu}
+							sx={{
+								display: { xs: "block", md: "none" },
+							}}>
+							{pages.map((page) => (
+								<Link href={page.url} passHref key={page.url}>
+									<MenuItem onClick={handleCloseNavMenu}>
+										<Typography textAlign="center">{page.name}</Typography>
+									</MenuItem>
+								</Link>
+							))}
+						</Menu>
+					</Box>
+					<Typography
+						variant="h5"
+						noWrap
+						component="a"
+						href=""
+						sx={{
+							mr: 2,
+							display: { xs: "flex", md: "none" },
+							flexGrow: 1,
+							fontFamily: "monospace",
+							fontWeight: 700,
+							letterSpacing: ".3rem",
+							color: "inherit",
+							textDecoration: "none",
+						}}>
+						瑾諺工程
+					</Typography>
+					<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+						{pages.map((page) => (
+							<Link href={page.url} passHref key={page.url}>
+								<Button
+									onClick={handleCloseNavMenu}
+									sx={{ my: 2, color: "#000000", display: "block" }}>
+									{page.name}
+								</Button>
+							</Link>
+						))}
+					</Box>
+				</Toolbar>
 			</Container>
-		</Nav>
+		</AppBar>
 	);
 }
+export default ResponsiveAppBar;
