@@ -5,12 +5,12 @@ import Link from "next/link";
 import { theme } from "@/app/globalStyles";
 
 const Container = styled.div`
-	background-color: ${theme.color.green[100]};
 	position: relative;
 	bottom: 0;
 	left: 0;
 	height: 120px;
 	width: 100%;
+	border-top: 1px solid #eaeaea;
 	margin-top: 20px;
 `;
 

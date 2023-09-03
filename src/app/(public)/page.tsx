@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 import { Container, Typography } from "@mui/material";
 
@@ -8,6 +10,16 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import { palette } from "@mui/system";
 import { grey } from "@mui/material/colors";
+
+import ListSubheader from "@mui/material/ListSubheader";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import { Yantramanav } from "next/font/google";
 
 const projects = [
 	{
@@ -36,7 +48,55 @@ const projects = [
 	},
 ];
 
+const services = [
+	{
+		title: "以下項目皆為範例",
+		content: "我可以根據公司實際營運狀況與服務項目提出調整。",
+	},
+	{
+		title: "建築設計",
+		content:
+			"我們提供建築師設計的建築圖紙和平面圖，以滿足客戶的特定需求和規格。",
+	},
+	{
+		title: "規劃和土地利用分析",
+		content:
+			"協助您的建案確定最佳土地利用方式，考慮到環境、法規和可持續性因素。",
+	},
+	{
+		title: "施工圖和詳細設計",
+		content: "創建施工所需的詳細圖紙，包括結構設計、電氣、管道和機械系統。",
+	},
+	{
+		title: "預算和成本估算",
+		content: "協助您估算建造項目的預算，並監控成本以確保在預算內完成。",
+	},
+	{
+		title: "建造管理",
+		content:
+			"提供建造項目的管理和監督，以確保工程順利進行，符合時間表和質量標準。",
+	},
+	{
+		title: "建築許可和法規遵循",
+		content: "協助您處理建築許可和確保項目遵循當地建築法規和規定。",
+	},
+];
+
+const serviceImg =
+	"https://firebasestorage.googleapis.com/v0/b/jingyen-45c98.appspot.com/o/home%2Fservices%2Fservice.png?alt=media&token=8457fb74-0c6b-4533-9daf-671a0192e94e";
+
 export default function Home() {
+	const [isSelectedService, setIsSelectedService] = useState(-1);
+
+	const handleClick = (index: number) => {
+		if (index === isSelectedService) {
+			setIsSelectedService(-1);
+			return;
+		}
+
+		setIsSelectedService(index);
+	};
+
 	return (
 		<Container sx={{ mt: 5 }}>
 			<Box sx={{ flexGrow: 1 }}>
@@ -49,7 +109,7 @@ export default function Home() {
 								alignItems: "center",
 								justifyContent: "center",
 							}}>
-							<Typography variant="h1" sx={{ width: "100%" }}>
+							<Typography variant="h1" sx={{ width: "100%", fontWeight: 500 }}>
 								專業版模，
 								<br />
 								成就非凡建築。
@@ -63,6 +123,7 @@ export default function Home() {
 						md={12}
 						sx={{
 							height: "auto",
+							marginBottom: "100px",
 						}}>
 						<Grid item xs={12} md={12}>
 							<Box>
@@ -112,12 +173,62 @@ export default function Home() {
 					<Grid item xs={12} md={12}>
 						<Box
 							sx={{
-								height: 1000,
+								height: "auto",
+								mb: 10,
 							}}>
 							<Typography variant="h2" sx={{ width: "100%" }}>
 								服務項目
 							</Typography>
-							<Divider sx={{ mt: 2 }} />
+							<Divider sx={{ mt: 2, mb: 4 }} />
+
+							<Box
+								sx={{
+									display: "flex",
+									gap: "20px",
+									justifyContent: "space-evenly",
+								}}>
+								<List
+									sx={{
+										width: "50%",
+										bgcolor: "background.paper",
+									}}
+									component="nav"
+									aria-labelledby="nested-list-subheader">
+									{services.map((item, index) => (
+										<div key={item.title}>
+											<ListItemButton
+												onClick={() => handleClick(index)}
+												sx={{ height: "80px" }}
+												divider>
+												<ListItemText primary={item.title} />
+												{isSelectedService === index &&
+												isSelectedService !== -1 ? (
+													<ExpandLess />
+												) : (
+													<ExpandMore />
+												)}
+											</ListItemButton>
+											<Collapse
+												in={isSelectedService === index}
+												timeout="auto"
+												unmountOnExit>
+												<List component="div" disablePadding>
+													<ListItemButton sx={{ pl: 4, minHeight: "80px" }}>
+														<ListItemText primary={item.content} />
+													</ListItemButton>
+												</List>
+											</Collapse>
+										</div>
+									))}
+								</List>
+								<Image
+									width={420}
+									height={600}
+									alt="瑾諺提供專業服務"
+									src={serviceImg}
+									style={{ objectFit: "cover" }}
+								/>
+							</Box>
 						</Box>
 					</Grid>
 				</Grid>
