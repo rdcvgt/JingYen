@@ -5,21 +5,43 @@ import { useState } from "react";
 import Image from "next/image";
 import { Container, Typography } from "@mui/material";
 
+import styled from "@emotion/styled";
+
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
-import { palette } from "@mui/system";
 import { grey } from "@mui/material/colors";
 
-import ListSubheader from "@mui/material/ListSubheader";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { Yantramanav } from "next/font/google";
+
+const Square = styled.div`
+	width: 250px;
+	height: 250px;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.9);
+	position: absolute;
+	top: -180px;
+	right: 0;
+`;
+
+const Blur = styled.div`
+	width: 250px;
+	height: 250px;
+	border-radius: 50px;
+	border: 1px solid #ccc;
+	--webkit-backdrop-filter: saturate(180%) blur(10px);
+	backdrop-filter: saturate(180%) blur(10px);
+	background-color: rgba(256, 256, 256, 0.1);
+	box-shadow: none;
+	position: absolute;
+	right: 120px;
+	top: -80px;
+`;
 
 const projects = [
 	{
@@ -105,10 +127,20 @@ export default function Home() {
 						<Box
 							sx={{
 								height: 800,
+								width: "100%",
 								display: "flex",
 								alignItems: "center",
 								justifyContent: "center",
+								position: "relative",
 							}}>
+							<Box sx={{ position: "absolute", right: 0 }}>
+								<Square />
+								<Blur />
+								{/* <Round /> */}
+								{/* <LogoBox>
+									<Image width={200} height={200} alt="" src="/logo.png" />
+								</LogoBox> */}
+							</Box>
 							<Typography variant="h1" sx={{ width: "100%", fontWeight: 500 }}>
 								專業版模，
 								<br />

@@ -151,7 +151,7 @@ export default function SearchCase() {
 								target="_blank">
 								<ListItemButton divider sx={{ height: "100px" }}>
 									<ListItemAvatar>
-										<Avatar>
+										<Avatar sx={{ bgcolor: "black" }}>
 											<HomeWorkIcon />
 										</Avatar>
 									</ListItemAvatar>

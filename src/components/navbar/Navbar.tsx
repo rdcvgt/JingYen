@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+
 import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -14,7 +16,6 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 
 const pages = [
-	{ name: "編輯後台", url: "/cms/add-case" },
 	{ name: "工程實績", url: "/case" },
 	{ name: "關於我們", url: "/about-us" },
 	{ name: "聯繫業務", url: "/contact" },
@@ -43,22 +44,32 @@ function ResponsiveAppBar() {
 			}}>
 			<Container maxWidth="xl">
 				<Toolbar disableGutters>
-					<Typography
-						variant="h6"
-						noWrap
-						component="a"
-						href="/"
-						sx={{
-							mr: 2,
-							display: { xs: "none", md: "flex" },
-							fontFamily: "monospace",
-							fontWeight: 700,
-							letterSpacing: ".3rem",
-							color: "inherit",
-							textDecoration: "none",
-						}}>
-						瑾諺工程
-					</Typography>
+					<Link href="/">
+						<Box
+							sx={{
+								mr: 1,
+								display: { xs: "none", md: "flex" },
+								gap: "5px",
+								alignItems: "center",
+							}}>
+							<Image width={20} height={20} alt="" src="/logo.png" />
+							<Typography
+								variant="h6"
+								noWrap
+								component="div"
+								sx={{
+									display: "inline-block",
+									height: "100%",
+									fontFamily: "monospace",
+									fontWeight: 700,
+									letterSpacing: ".2rem",
+									color: "inherit",
+									textDecoration: "none",
+								}}>
+								瑾諺工程
+							</Typography>
+						</Box>
+					</Link>
 
 					<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
 						<IconButton
