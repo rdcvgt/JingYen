@@ -16,7 +16,6 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 
 const pages = [
-	{ name: "編輯後台", url: "/cms/add-case" },
 	{ name: "工程實績", url: "/case" },
 	{ name: "關於我們", url: "/about-us" },
 	{ name: "聯繫業務", url: "/contact" },
