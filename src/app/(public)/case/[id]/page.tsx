@@ -53,9 +53,16 @@ export interface CasePhotoArr {
 	url: string;
 }
 
+const loading: CasePhotoArr = {
+	name: "loading...",
+	url: "/loading.png",
+};
+
 export default function Case({ params }: { params: { id: string } }) {
 	const [caseData, setCaseData] = useState<FormData>();
-	const [casePhotoArr, setCasePhotoArr] = useState<CasePhotoArr[] | []>([]);
+	const [casePhotoArr, setCasePhotoArr] = useState<CasePhotoArr[] | []>([
+		loading,
+	]);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -72,6 +79,14 @@ export default function Case({ params }: { params: { id: string } }) {
 
 			try {
 				const data = (await getCasePhotos(params.id)) as CasePhotoArr[] | [];
+
+				if (data.length === 0) {
+					const noData: CasePhotoArr[] = [
+						{ name: "no image", url: "/noCaseImg.png" },
+					];
+					setCasePhotoArr(noData);
+					return;
+				}
 				setCasePhotoArr(data);
 			} catch (error) {
 				console.error("Error fetching case data:", error);

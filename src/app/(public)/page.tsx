@@ -136,10 +136,6 @@ export default function Home() {
 							<Box sx={{ position: "absolute", right: 0 }}>
 								<Square />
 								<Blur />
-								{/* <Round /> */}
-								{/* <LogoBox>
-									<Image width={200} height={200} alt="" src="/logo.png" />
-								</LogoBox> */}
 							</Box>
 							<Typography variant="h1" sx={{ width: "100%", fontWeight: 500 }}>
 								專業版模，
