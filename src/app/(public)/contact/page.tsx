@@ -42,7 +42,7 @@ const FormArea = styled.div`
 const Title = styled.div`
 	${theme.font.pageTitleStyle}
 	margin-bottom: 20px;
-	color: ${theme.color.green[70]};
+	color: ${theme.color.beige[90]};
 `;
 
 const Description = styled.div`
