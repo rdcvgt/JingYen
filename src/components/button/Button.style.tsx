@@ -14,13 +14,13 @@ const defaultStyle = css`
 
 export const defaultBtn = css`
 	${defaultStyle}
-	background-color: ${theme.color.green[70]};
+	background-color: ${theme.color.beige[90]};
 	color: #fff;
 	transition: all 0.3s;
 
 	&:hover {
 		transition: all 0.3s;
-		background-color: ${theme.color.green[50]};
+		background-color: ${theme.color.beige[90]};
 	}
 `;
 
@@ -30,8 +30,8 @@ export const secondaryBtn = css`
 
 	&:hover {
 		transition: all 0.3s;
-		border: 1px solid ${theme.color.green[50]};
-		color: ${theme.color.green[50]};
+		border: 1px solid ${theme.color.beige[90]};
+		color: ${theme.color.beige[90]};
 	}
 `;
 

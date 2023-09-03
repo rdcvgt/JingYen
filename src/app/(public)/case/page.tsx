@@ -8,6 +8,16 @@ import { css } from "@emotion/react";
 import { secondaryBtn, defaultBtn } from "@/components/button/Button.style";
 import { getMainFieldsFromCases, MainFields } from "@/firebase/database";
 
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
+
 const Container = styled.div`
 	margin: 120px auto;
 	width: 1120px;
@@ -25,62 +35,19 @@ const Condition = styled.div`
 const ConditionTitle = styled.div`
 	${theme.font.pageTitleStyle}
 	margin-bottom: 20px;
-	color: ${theme.color.green[70]};
-`;
-
-const OptionsArea = styled.div`
-	display: flex;
-	align-items: center;
-	width: 100%;
-	height: 50px;
-	gap: 20px;
-	margin-bottom: 20px;
-`;
-
-const Option = styled.div<{ isSelected: boolean }>`
-	${({ isSelected }) =>
-		isSelected
-			? css`
-					${defaultBtn}
-			  `
-			: css`
-					${secondaryBtn}
-			  `}
-
-	width: 10%;
-	height: 100%;
-	border-radius: 50px;
+	color: ${theme.color.beige[90]};
 `;
 
 const Result = styled.div`
 	width: 100%;
-	margin-top: 20px;
-`;
-
-const Case = styled.div`
-	border-bottom: 1px solid ${theme.color.beige[10]};
-	padding: 30px 0;
 `;
 
 const Title = styled.div`
 	${theme.font.caseTitleStyle}
-	color: ${theme.color.green[70]};
+	color: ${theme.color.beige[90]};
 	padding-bottom: 10px;
 	transition: all 0.3s;
-	&:hover {
-		color: ${theme.color.green[50]};
-		transition: all 0.3s;
-	}
 `;
-
-const Item = styled.div`
-	${theme.font.caseDescStyle}
-	display: flex;
-	align-items: center;
-	padding-top: 5px;
-`;
-
-const Detail = styled.div``;
 
 export default function SearchCase() {
 	const [caseData, setCaseData] = useState<MainFields[] | undefined>();
@@ -126,66 +93,76 @@ export default function SearchCase() {
 		setFilteredData(finalData);
 	}, [caseData, isPersonal, isGovernment, isCompleted, isOngoing]);
 
+	const handleClickCompleted = () => {
+		setIsCompleted(!isCompleted);
+		setIsOngoing(!isOngoing);
+	};
+
+	const handleClickOngoing = () => {
+		setIsOngoing(!isOngoing);
+		setIsCompleted(!isCompleted);
+	};
+
 	return (
 		<Container>
 			<ConditionTitle>工程實績</ConditionTitle>
 			<Condition>
-				<OptionsArea>
+				<Stack direction="row" spacing={1} sx={{ mb: 4, alignItems: "center" }}>
 					工程進度：
-					<Option
-						isSelected={isCompleted}
-						onClick={() => {
-							setIsCompleted(!isCompleted);
-							setIsOngoing(!isOngoing);
-						}}>
-						已完成
-					</Option>
-					<Option
-						isSelected={isOngoing}
-						onClick={() => {
-							setIsOngoing(!isOngoing);
-							setIsCompleted(!isCompleted);
-						}}>
-						進行中
-					</Option>
-				</OptionsArea>
-				<OptionsArea>
+					<Chip
+						label="已完成"
+						variant={isCompleted ? "filled" : "outlined"}
+						onClick={handleClickCompleted}
+					/>
+					<Chip
+						label="進行中"
+						variant={isOngoing ? "filled" : "outlined"}
+						onClick={handleClickOngoing}
+					/>
+				</Stack>
+				<Stack direction="row" spacing={1} sx={{ mb: 4, alignItems: "center" }}>
 					工程類型：
-					<Option
-						isSelected={isPersonal}
+					<Chip
+						label="民宅"
+						variant={isPersonal ? "filled" : "outlined"}
 						onClick={() => {
 							setIsPersonal(!isPersonal);
-						}}>
-						民宅
-					</Option>
-					<Option
-						isSelected={isGovernment}
+						}}
+					/>
+					<Chip
+						label="公有"
+						variant={isGovernment ? "filled" : "outlined"}
 						onClick={() => {
 							setIsGovernment(!isGovernment);
-						}}>
-						公有
-					</Option>
-				</OptionsArea>
+						}}
+					/>
+				</Stack>
 			</Condition>
 			<Result>
-				{filteredData &&
-					filteredData.map((el) => (
-						<Link
-							key={el.caseId}
-							href={`/case/${el.caseId}`}
-							rel="noopener noreferrer"
-							target="_blank">
-							<Case>
-								<Title>{el.mainField.工程名稱}</Title>
-								<Item>
-									業主：<Detail>{el.mainField.工程業主}</Detail>
-								</Item>
-								<Item>
-									模板數量：<Detail>{el.mainField.模板數量} ㎡</Detail>
-								</Item>
-							</Case>
-						</Link>
-					))}
+				<List
+					sx={{ width: "100%", bgcolor: "background.paper" }}
+					component="nav">
+					{filteredData &&
+						filteredData.map((el) => (
+							<Link
+								key={el.caseId}
+								href={`/case/${el.caseId}`}
+								rel="noopener noreferrer"
+								target="_blank">
+								<ListItemButton divider sx={{ height: "100px" }}>
+									<ListItemAvatar>
+										<Avatar>
+											<HomeWorkIcon />
+										</Avatar>
+									</ListItemAvatar>
+									<ListItemText
+										primary={el.mainField.工程名稱}
+										secondary={`模版數量：${el.mainField.模板數量} ㎡`}
+									/>
+								</ListItemButton>
+							</Link>
+						))}
+				</List>
 				{filteredData?.length === 0 && <Title>尚未有相關工程案例</Title>}
 			</Result>
 		</Container>
